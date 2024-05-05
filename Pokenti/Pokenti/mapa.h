@@ -15,14 +15,13 @@ void dibujarMapa(char** mapa, int filas, int columnas) {
         for (int j = 0; j < columnas; ++j) {
             switch (mapa[i][j]) {
             case 'X':
-                SetConsoleTextAttribute(hConsole, 8); // Gris
-                cout << char(219);
+                SetConsoleTextAttribute(hConsole, 8); // Gris          
                 break;
             default:
                 SetConsoleTextAttribute(hConsole, 15); // Blanco
-                cout << mapa[i][j];
                 break;
             }
+            cout << mapa[i][j];
         }
         cout << endl;
     }
