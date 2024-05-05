@@ -23,5 +23,8 @@
     <ClInclude Include="mapa.h">
       <Filter>Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="Ash.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
   </ItemGroup>
 </Project>
