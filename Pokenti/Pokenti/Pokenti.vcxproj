@@ -132,6 +132,7 @@
   <ItemGroup>
     <ClInclude Include="Ash.h" />
     <ClInclude Include="mapa.h" />
+    <ClInclude Include="Types.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

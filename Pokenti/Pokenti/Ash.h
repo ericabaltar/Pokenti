@@ -1,20 +1,15 @@
 #pragma once
 #include<iostream>
-#include "windows.h"
-
-struct AshPosition {
-    int x;
-    int y;
-};
-
+#include <Windows.h>
+#include "Types.h"
 
 
 struct Ash {
     int Pokimon;
     enum AshMovement { UP, DOWN, LEFT, RIGHT, NONE };
     AshMovement currentMove;
-    AshPosition pos;
-    AshPosition prevPos;
+    Position pos;
+    Position prevPos;
     char AshLook;
     Ash() {
         this->Pokimon = 0;
@@ -24,24 +19,53 @@ struct Ash {
         this->currentMove = NONE;
     }
 
-    void setAshPos() {
+    void setAshPos(int mapBorderX, int mapBorderY) {
         prevPos = pos;
         switch (currentMove) {
-        case UP:
-            pos.y--;
+ 
+        case UP: {
             AshLook = '^';
+            if (pos.y - 1 <= 0)
+            {
+                //no puedo hacer el movimiento
+                currentMove = NONE;
+                return;
+            }
+            pos.y--;
+        }
             break;
-        case DOWN:
-            pos.y++;
+        case DOWN: {
             AshLook = 'v';
+            if (pos.y + 1 > mapBorderY-2)
+            {
+                //no puedo hacer el movimiento
+                currentMove = NONE;
+                return;
+            }
+            pos.y++;
+        }
             break;
-        case LEFT:
-            pos.x--;
+        case LEFT: {
             AshLook = '<';
+            if (pos.x - 1 <= 0)
+            {
+                //no puedo hacer el movimiento
+                currentMove = NONE;
+                return;
+            }
+            pos.x--;
+        }
             break;
-        case RIGHT:
-            pos.x++;
+        case RIGHT: {
             AshLook = '>';
+            if (pos.x + 1 > mapBorderX-2)
+            {
+                //no puedo hacer el movimiento
+                currentMove = NONE;
+                return;
+            }
+            pos.x++;
+        }
             break;
         default:
             break;
@@ -52,7 +76,7 @@ struct Ash {
     {
         std::cout << AshLook << std::endl;
     }
-    void MoveAsh() {
+    void MoveAsh(int mapBorderX, int mapBorderY) {
         if (GetAsyncKeyState(VK_UP))
             currentMove = AshMovement::UP;
         else if (GetAsyncKeyState(VK_DOWN))
@@ -62,7 +86,7 @@ struct Ash {
         else if (GetAsyncKeyState(VK_RIGHT))
             currentMove = AshMovement::RIGHT;
 
-        setAshPos();
+        setAshPos(mapBorderX, mapBorderY);
     }
 };
 
