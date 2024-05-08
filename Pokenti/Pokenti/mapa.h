@@ -15,10 +15,13 @@ struct Mapa
     int FIRST_AREA_MIN_POK;
     int SECOND_AREA_POK;
     int SECOND_AREA_MIN_POK;
+    int limiteMapa_x;
+    int limiteMapa_y;
     const char VACIO = ' ';
     const char PARED = 'X';
+    const char SEPARADOR = 'x';
     const char POKEMON = 'P';
-    const int RANGO_VISTA_JUGADOR = 1;
+    //const int RANGO_VISTA_JUGADOR = 1;
     char** casillas;
 
     Mapa() {
@@ -39,7 +42,10 @@ struct Mapa
 
             myFile.close();
         }
-        
+
+        int mitadFilas = limiteMapa_y = FILAS / 2;
+        int mitadColumnas = limiteMapa_x = COLUMNAS / 2;
+
         casillas = new char* [FILAS];
         for (int i = 0; i < FILAS; ++i) {
             casillas[i] = new char[COLUMNAS];
@@ -50,37 +56,39 @@ struct Mapa
                 if (i == 0 || j == 0 || i == FILAS - 1 || j == COLUMNAS - 1) {
                     casillas[i][j] = PARED;
                 }
+                else if (i == mitadFilas || j == mitadColumnas) {
+                    casillas[i][j] = SEPARADOR;
+                }
             }
         }
 
-        int mitadFilas = FILAS / 2;
-        int mitadColumnas = COLUMNAS / 2;
+
 
         // Cuadrante 1: Pueblo Paleta
-        for (int i = 1; i < mitadFilas; ++i) {
-            for (int j = 1; j < mitadColumnas; ++j) {
-                casillas[i][j] = 'a';
+        for (int i = 1; i < mitadFilas - 1; ++i) {
+            for (int j = 1; j < mitadColumnas - 1; ++j) {
+                casillas[i][j] = VACIO;
             }
         }
 
         // Cuadrante 2: Bosque
-        for (int i = 1; i < mitadFilas; ++i) {
-            for (int j = mitadColumnas; j < COLUMNAS - 1; ++j) {
-                casillas[i][j] = 'b';
+        for (int i = 1; i < mitadFilas - 1; ++i) {
+            for (int j = mitadColumnas + 1; j < COLUMNAS - 1; ++j) {
+                casillas[i][j] = VACIO;
             }
         }
 
         // Cuadrante 3: Cueva Celeste
-        for (int i = mitadFilas; i < FILAS - 1; ++i) {
-            for (int j = 1; j < mitadColumnas; ++j) {
-                casillas[i][j] = 'c';
+        for (int i = mitadFilas + 1; i < FILAS - 1; ++i) {
+            for (int j = 1; j < mitadColumnas - 1; ++j) {
+                casillas[i][j] = VACIO;
             }
         }
 
         // Cuadrante 4: Liga PokENTI
-        for (int i = mitadFilas; i < FILAS - 1; ++i) {
-            for (int j = mitadColumnas; j < COLUMNAS - 1; ++j) {
-                casillas[i][j] = 'd';
+        for (int i = mitadFilas + 1; i < FILAS - 1; ++i) {
+            for (int j = mitadColumnas + 1; j < COLUMNAS - 1; ++j) {
+                casillas[i][j] = VACIO;
             }
         }
     }
@@ -92,7 +100,7 @@ struct Mapa
         delete[] casillas;
     }
 
-    void PintarVista(Position playerPos, int MaxX, int MaxY)
+    void PintarVista()
     {
         HANDLE hConsole = GetStdHandle(STD_OUTPUT_HANDLE);
         CONSOLE_CURSOR_INFO cursorInfo;
@@ -100,27 +108,40 @@ struct Mapa
         cursorInfo.bVisible = false;
         SetConsoleCursorInfo(hConsole, &cursorInfo);
 
-        int clampedViewMinX = std::max<int>(0, playerPos.x - RANGO_VISTA_JUGADOR);
-        int clampedViewMaxX = std::min<int>(MaxX, playerPos.x + RANGO_VISTA_JUGADOR);
-        int clampedViewMinY = std::max<int>(0, playerPos.y - RANGO_VISTA_JUGADOR);
-        int clampedViewMaxY = std::min<int>(MaxY, playerPos.y + RANGO_VISTA_JUGADOR);
-        
+        //int clampedViewMinX = std::max<int>(0, playerPos.x - RANGO_VISTA_JUGADOR);
+        int clampedViewMinX = 0;
+        int clampedViewMaxX = limiteMapa_x;
+        //int clampedViewMaxX = std::min<int>(MaxX, playerPos.x + RANGO_VISTA_JUGADOR);
+        //int clampedViewMinY = std::max<int>(0, playerPos.y - RANGO_VISTA_JUGADOR);
+        int clampedViewMinY = 0;
+        int clampedViewMaxY = limiteMapa_y;
+        //int clampedViewMaxY = std::min<int>(MaxY, playerPos.y + RANGO_VISTA_JUGADOR);
+
         for (int i = clampedViewMinY; i <= clampedViewMaxY; i++)
         {
             for (int j = clampedViewMinX; j <= clampedViewMaxX; j++)
             {
                 switch (casillas[i][j]) {
+                case '<':
+                case '>':
+                case 'v':
+                case '^':
+                    SetConsoleTextAttribute(hConsole, 12); // Rojo
+                    break;
                 case 'X':
                     SetConsoleTextAttribute(hConsole, 8); // Gris          
+                    break;
+                case 'x':
+                    SetConsoleTextAttribute(hConsole, 9); // Azul
                     break;
                 default:
                     SetConsoleTextAttribute(hConsole, 15); // Blanco
                     break;
                 }
                 cout << casillas[i][j];
-                cout << '\t';
+                SetConsoleTextAttribute(hConsole, 15); // Blanco
             }
-            cout << endl << endl;
+            cout << endl;
         }
     }
 

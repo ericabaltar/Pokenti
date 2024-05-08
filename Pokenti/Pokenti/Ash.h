@@ -22,7 +22,7 @@ struct Ash {
     void setAshPos(int mapBorderX, int mapBorderY) {
         prevPos = pos;
         switch (currentMove) {
- 
+
         case UP: {
             AshLook = '^';
             if (pos.y - 1 <= 0)
@@ -33,10 +33,10 @@ struct Ash {
             }
             pos.y--;
         }
-            break;
+               break;
         case DOWN: {
             AshLook = 'v';
-            if (pos.y + 1 > mapBorderY-2)
+            if (pos.y + 1 > mapBorderY - 2)
             {
                 //no puedo hacer el movimiento
                 currentMove = NONE;
@@ -44,7 +44,7 @@ struct Ash {
             }
             pos.y++;
         }
-            break;
+                 break;
         case LEFT: {
             AshLook = '<';
             if (pos.x - 1 <= 0)
@@ -55,10 +55,10 @@ struct Ash {
             }
             pos.x--;
         }
-            break;
+                 break;
         case RIGHT: {
             AshLook = '>';
-            if (pos.x + 1 > mapBorderX-2)
+            if (pos.x + 1 > mapBorderX - 2)
             {
                 //no puedo hacer el movimiento
                 currentMove = NONE;
@@ -66,16 +66,16 @@ struct Ash {
             }
             pos.x++;
         }
-            break;
+                  break;
         default:
             break;
         }
         currentMove = NONE;
     }
-    void printAsh()
-    {
-        std::cout << AshLook << std::endl;
-    }
+    /* void printAsh()
+     {
+         std::cout << AshLook << std::endl;
+     }*/
     void MoveAsh(int mapBorderX, int mapBorderY) {
         if (GetAsyncKeyState(VK_UP))
             currentMove = AshMovement::UP;
