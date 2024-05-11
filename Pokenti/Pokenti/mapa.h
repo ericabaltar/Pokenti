@@ -68,12 +68,32 @@ struct Mapa
                 casillas[i][j] = VACIO;
             }
         }
+        // Cuadrante 2: Bosque
+        for (int i = 1; i < mitadFilas - 1; ++i) {
+            for (int j = mitadColumnas + 1; j < COLUMNAS - 1; ++j) {
+                casillas[i][j] = VACIO;
+            }
+        }
+
+        // Cuadrante 3: Cueva Celeste
+        for (int i = mitadFilas + 1; i < FILAS - 1; ++i) {
+            for (int j = 1; j < mitadColumnas - 1; ++j) {
+                casillas[i][j] = VACIO;
+            }
+        }
+        // Cuadrante 4: Liga PokENTI
+        for (int i = mitadFilas + 1; i < FILAS - 1; ++i) {
+            for (int j = mitadColumnas + 1; j < COLUMNAS - 1; ++j) {
+                casillas[i][j] = VACIO;
+            }
+        }
+    
 
         // Inicializar la semilla de generación aleatoria
         srand(time(NULL));
 
         // Agregar los seis pokémons aleatoriamente en el Pueblo Paleta
-        for (int k = 0; k < 6; ++k) {
+        for ( FIRST_AREA_POK; FIRST_AREA_POK < 6; ++FIRST_AREA_POK) {
             int randomRow = rand() % (mitadFilas - 1) + 1;     // Generar fila aleatoria
             int randomCol = rand() % (mitadColumnas - 1) + 1;  // Generar columna aleatoria
 
@@ -101,8 +121,8 @@ struct Mapa
         SetConsoleCursorInfo(hConsole, &cursorInfo);
 
         // Generar posición aleatoria para el jugador
-        int jugadorX = rand() % (limiteMapa_x - 1) + 1;
-        int jugadorY = rand() % (limiteMapa_y - 1) + 1;
+        int jugadorX = 2;
+        int jugadorY = 2;
 
         // Contar la cantidad de pokémons presentes en el mapa
         int pokemonsPresentes = 0;
