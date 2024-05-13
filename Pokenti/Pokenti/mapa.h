@@ -18,10 +18,14 @@ struct Mapa
     int SECOND_AREA_MIN_POK;
     int limiteMapa_x;
     int limiteMapa_y;
+    int limiteMov_X;
+    int limiteMov_Y;
     const char VACIO = ' ';
     const char PARED = 'X';
     const char SEPARADOR = 'x';
     const char POKEMON = 'P';
+    const int RANGO_VISTA_JUGADOR_X = 22;
+    const int RANGO_VISTA_JUGADOR_Y = 12;
     char** casillas;
 
     Mapa() {
@@ -43,8 +47,13 @@ struct Mapa
             myFile.close();
         }
 
-        int mitadFilas = limiteMapa_y = FILAS / 2;
-        int mitadColumnas = limiteMapa_x = COLUMNAS / 2;
+        limiteMapa_x = COLUMNAS;
+        limiteMapa_y = FILAS/2;
+        limiteMov_X = COLUMNAS / 2 + 1;
+        limiteMov_Y = FILAS / 2 + 1;
+
+        int mitadFilas = FILAS / 2;
+        int mitadColumnas = COLUMNAS / 2;
 
         casillas = new char* [FILAS];
         for (int i = 0; i < FILAS; ++i) {
@@ -87,20 +96,28 @@ struct Mapa
                 casillas[i][j] = VACIO;
             }
         }
-    
-
-        // Inicializar la semilla de generación aleatoria
-        srand(time(NULL));
+        
 
         // Agregar los seis pokémons aleatoriamente en el Pueblo Paleta
-        for ( FIRST_AREA_POK; FIRST_AREA_POK < 6; ++FIRST_AREA_POK) {
-            int randomRow = rand() % (mitadFilas - 1) + 1;     // Generar fila aleatoria
-            int randomCol = rand() % (mitadColumnas - 1) + 1;  // Generar columna aleatoria
-
+        for (int i = 0; i < FIRST_AREA_POK; i++) {
             // Verificar si la casilla está vacía antes de colocar el pokémon
-            if (casillas[randomRow][randomCol] == VACIO) {
-                casillas[randomRow][randomCol] = POKEMON;
-            }
+            int nuevoPokemonX, nuevoPokemonY;
+            do {
+                nuevoPokemonX = rand() % (mitadColumnas / 2 - 1) + 1;
+                nuevoPokemonY = rand() % (mitadFilas / 2 - 1) + 1;
+            } while (casillas[nuevoPokemonY][nuevoPokemonX] != VACIO);
+
+            casillas[nuevoPokemonY][nuevoPokemonX] = POKEMON; // Colocar el nuevo Pokémon
+        }
+
+        for (int i = 0; i < SECOND_AREA_POK; i++) {
+            int nuevoPokemonX, nuevoPokemonY;
+            do {
+                nuevoPokemonX = rand() % (COLUMNAS / 2 - 1) + COLUMNAS / 2 - 1;
+                nuevoPokemonY = rand() % (FILAS / 2 - 1) + 1;
+            } while (casillas[nuevoPokemonY][nuevoPokemonX] != VACIO);
+            
+            casillas[nuevoPokemonY][nuevoPokemonX] = POKEMON; // Colocar el nuevo Pokémon
         }
     }
 
@@ -112,30 +129,62 @@ struct Mapa
         delete[] casillas;
     }
 
-    void PintarVista()
+    void GestionarPokemons()
     {
-        HANDLE hConsole = GetStdHandle(STD_OUTPUT_HANDLE);
-        CONSOLE_CURSOR_INFO cursorInfo;
-        GetConsoleCursorInfo(hConsole, &cursorInfo);
-        cursorInfo.bVisible = false;
-        SetConsoleCursorInfo(hConsole, &cursorInfo);
-
-        // Generar posición aleatoria para el jugador
-        int jugadorX = 2;
-        int jugadorY = 2;
-
         // Contar la cantidad de pokémons presentes en el mapa
-        int pokemonsPresentes = 0;
-        for (int i = 0; i < FILAS; ++i) {
-            for (int j = 0; j < COLUMNAS; ++j) {
+        int pokemonsPresentesZona1 = 0;
+        for (int i = 0; i < FILAS/2; ++i) {
+            for (int j = 0; j < COLUMNAS/2; ++j) {
                 if (casillas[i][j] == POKEMON) {
-                    pokemonsPresentes++;
+                    pokemonsPresentesZona1++;
                 }
             }
         }
-
         // Si hay menos de 6 pokémons, generar y colocar uno nuevo
-        if (pokemonsPresentes < 6) {
+        if (pokemonsPresentesZona1 < FIRST_AREA_POK) {
+            int nuevoPokemonX, nuevoPokemonY;
+            do {
+                nuevoPokemonX = rand() % (COLUMNAS/2 - 1) + 1;
+                nuevoPokemonY = rand() % (FILAS/2 - 1) + 1;
+            } while (casillas[nuevoPokemonY][nuevoPokemonX] != VACIO);
+
+            casillas[nuevoPokemonY][nuevoPokemonX] = POKEMON; // Colocar el nuevo Pokémon
+        }
+        int pokemonsPresentesZona2 = 0;
+        for (int i = 0; i < FILAS/2; ++i) {
+            for (int j = COLUMNAS/2; j < COLUMNAS; ++j) {
+                if (casillas[i][j] == POKEMON) {
+                    pokemonsPresentesZona2++;
+                }
+            }
+        }
+        // Si hay menos de 18 pokémons, generar y colocar uno nuevo
+        if (pokemonsPresentesZona2 < SECOND_AREA_POK) {
+            int nuevoPokemonX, nuevoPokemonY;
+            do {
+                nuevoPokemonX = rand() % (COLUMNAS/2 - 1) + COLUMNAS/2-1;
+                nuevoPokemonY = rand() % (FILAS/2 - 1) + 1;
+            } while (casillas[nuevoPokemonY][nuevoPokemonX] != VACIO);
+
+            casillas[nuevoPokemonY][nuevoPokemonX] = POKEMON; // Colocar el nuevo Pokémon
+        }
+    }
+
+    bool CazarPokemon(int jugadorX, int jugadorY)
+    {
+        if (casillas[jugadorY - 1][jugadorX] == POKEMON || casillas[jugadorY + 1][jugadorX] == POKEMON
+            || casillas[jugadorY][jugadorX + 1] == POKEMON || casillas[jugadorY][jugadorX - 1] == POKEMON)
+        {
+            if(casillas[jugadorY - 1][jugadorX] == POKEMON) 
+                casillas[jugadorY - 1][jugadorX] = VACIO;
+            else if(casillas[jugadorY + 1][jugadorX] == POKEMON) 
+                casillas[jugadorY + 1][jugadorX] = VACIO;
+            else if(casillas[jugadorY][jugadorX + 1] == POKEMON) 
+                casillas[jugadorY][jugadorX + 1] = VACIO;
+            else if(casillas[jugadorY][jugadorX - 1] == POKEMON) 
+                casillas[jugadorY][jugadorX - 1] = VACIO;
+
+            // Generar una nueva posición aleatoria para un Pokémon
             int nuevoPokemonX, nuevoPokemonY;
             do {
                 nuevoPokemonX = rand() % (limiteMapa_x - 1) + 1;
@@ -143,32 +192,68 @@ struct Mapa
             } while (casillas[nuevoPokemonY][nuevoPokemonX] != VACIO);
 
             casillas[nuevoPokemonY][nuevoPokemonX] = POKEMON; // Colocar el nuevo Pokémon
+            return true;
         }
+        return false;
+    }
 
-        //int clampedViewMinX = std::max<int>(0, playerPos.x - RANGO_VISTA_JUGADOR);
-        int clampedViewMinX = 0;
-        int clampedViewMaxX = limiteMapa_x;
-        //int clampedViewMaxX = std::min<int>(MaxX, playerPos.x + RANGO_VISTA_JUGADOR);
-        //int clampedViewMinY = std::max<int>(0, playerPos.y - RANGO_VISTA_JUGADOR);
-        int clampedViewMinY = 0;
-        int clampedViewMaxY = limiteMapa_y;
-        //int clampedViewMaxY = std::min<int>(MaxY, playerPos.y + RANGO_VISTA_JUGADOR);
+    void PintarVista(Position playerPos)
+    {
+        HANDLE hConsole = GetStdHandle(STD_OUTPUT_HANDLE);
+        CONSOLE_CURSOR_INFO cursorInfo;
+        GetConsoleCursorInfo(hConsole, &cursorInfo);
+        cursorInfo.bVisible = false;
+        SetConsoleCursorInfo(hConsole, &cursorInfo);
+
+        int clampedViewMinX = std::max<int>(0, playerPos.x - RANGO_VISTA_JUGADOR_X);
+        int clampedViewMaxX = std::min<int>(limiteMapa_x, playerPos.x + RANGO_VISTA_JUGADOR_X);
+        int clampedViewMinY = std::max<int>(0, playerPos.y - RANGO_VISTA_JUGADOR_Y);
+        int clampedViewMaxY = std::min<int>(limiteMapa_y, playerPos.y + RANGO_VISTA_JUGADOR_Y);
 
         for (int i = clampedViewMinY; i <= clampedViewMaxY; i++)
         {
             for (int j = clampedViewMinX; j <= clampedViewMaxX; j++)
             {
-                // Verificar si el jugador está en la misma posición que un Pokémon
-                if (i == jugadorY && j == jugadorX && casillas[i][j] == POKEMON) {
-                    // Generar una nueva posición aleatoria para un Pokémon
-                    int nuevoPokemonX, nuevoPokemonY;
-                    do {
-                        nuevoPokemonX = rand() % (limiteMapa_x - 1) + 1;
-                        nuevoPokemonY = rand() % (limiteMapa_y - 1) + 1;
-                    } while (casillas[nuevoPokemonY][nuevoPokemonX] != VACIO);
-
-                    casillas[nuevoPokemonY][nuevoPokemonX] = POKEMON; // Colocar el nuevo Pokémon
+                switch (casillas[i][j]) {
+                case '<':
+                case '>':
+                case 'v':
+                case '^':
+                    SetConsoleTextAttribute(hConsole, 12); // Rojo
+                    break;
+                case 'X':
+                    SetConsoleTextAttribute(hConsole, 8); // Gris          
+                    break;
+                case 'x':
+                    SetConsoleTextAttribute(hConsole, 9); // Azul
+                    break;
+                case 'P':
+                    SetConsoleTextAttribute(hConsole, 13); // Rosa
+                    break;
+                default:
+                    SetConsoleTextAttribute(hConsole, 15); // Blanco
+                    break;
                 }
+                cout << casillas[i][j];
+                SetConsoleTextAttribute(hConsole, 15); // Blanco
+            }
+            cout << endl;
+        }
+    }
+    
+    void PintarTodo()
+    {
+        HANDLE hConsole = GetStdHandle(STD_OUTPUT_HANDLE);
+        CONSOLE_CURSOR_INFO cursorInfo;
+        GetConsoleCursorInfo(hConsole, &cursorInfo);
+        cursorInfo.bVisible = false;
+        SetConsoleCursorInfo(hConsole, &cursorInfo);
+
+        for (int i = 0; i < FILAS; i++)
+        {
+            for (int j = 0; j < COLUMNAS; j++)
+            {
+                //CazarPokemon(i, jugadorY, j, jugadorX);
 
                 switch (casillas[i][j]) {
                 case '<':
@@ -183,6 +268,9 @@ struct Mapa
                 case 'x':
                     SetConsoleTextAttribute(hConsole, 9); // Azul
                     break;
+                case 'P':
+                    SetConsoleTextAttribute(hConsole, 13); // Rosa
+                    break;
                 default:
                     SetConsoleTextAttribute(hConsole, 15); // Blanco
                     break;
@@ -191,6 +279,32 @@ struct Mapa
                 SetConsoleTextAttribute(hConsole, 15); // Blanco
             }
             cout << endl;
+        }
+    }
+
+    void UnlockBosque()
+    {
+        //aumentar limites de la camara (y el player)
+        limiteMapa_x = COLUMNAS-1;
+        limiteMov_X = COLUMNAS-1;
+        //borrar la barrera
+        for (int i = 1; i < FILAS/2; ++i) {
+            casillas[i][COLUMNAS/2] = VACIO;            
+        }
+    }
+    void UnlockCueva()
+    {
+        //aumentar limites de la camara (y el player)
+        limiteMapa_x = COLUMNAS-1;
+        limiteMov_X = COLUMNAS-1;
+        limiteMov_Y = FILAS-1;
+        limiteMapa_y = FILAS-1;
+        //borrar barreras
+        for (int i = FILAS / 2; i < FILAS-1; ++i) {
+            casillas[i][COLUMNAS / 2] = VACIO;
+        }
+        for (int i = 1; i < COLUMNAS-1; ++i) {
+            casillas[FILAS/2][i] = VACIO;            
         }
     }
 };
