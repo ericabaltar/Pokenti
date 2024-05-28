@@ -18,6 +18,12 @@ struct Mapa
     int FIRST_AREA_MIN_POK;
     int SECOND_AREA_POK;
     int SECOND_AREA_MIN_POK;
+    int ERICACHU_DAMAGE;
+    int POKEMON_LIFE;
+    int MEWTWO_LIFE;
+    int MIN_TIME_MOVE_POKEMON;
+    int MAX_TIME_MOVE_POKEMON;
+
     int limiteMapa_x;
     int limiteMapa_y;
     int limiteMov_X;
@@ -48,6 +54,9 @@ struct Mapa
         myFile >> FILAS >> aux >> COLUMNAS >> aux;
         myFile >> FIRST_AREA_POK >> aux >> FIRST_AREA_MIN_POK >> aux;
         myFile >> SECOND_AREA_POK >> aux >> SECOND_AREA_MIN_POK >> aux;
+        myFile >> ERICACHU_DAMAGE >> aux;
+        myFile >> POKEMON_LIFE >> aux >> MEWTWO_LIFE >> aux;
+        myFile >> MIN_TIME_MOVE_POKEMON >> aux >> MAX_TIME_MOVE_POKEMON >> aux;
 
         myFile.close();
 
