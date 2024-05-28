@@ -19,7 +19,7 @@ int main() {
         mapa.GestionarPokemons();
         mapa.GestionarPokeBalls();
         //Comprobar si se caza un pokemon
-        if (mapa.CazarPokemon(ash.pos.x, ash.pos.y))
+        if (mapa.CazarPokemon(ash.pos.x, ash.pos.y,ash.pos))
         {
             ash.Pokimon += 1;
         }

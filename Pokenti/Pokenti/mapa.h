@@ -2,9 +2,11 @@
 #include <fstream>
 #include <Windows.h>
 #include "Types.h"
+#include "Ash.h"
 #include <algorithm>
 #include <cstdlib> // Para la generación de números aleatorios
 #include <ctime>   // Para inicializar la semilla de generación aleatoria
+#include <conio.h> // Incluir la librería para getch()
 
 using namespace std;
 
@@ -234,31 +236,43 @@ struct Mapa
         }
     }
 
-    bool CazarPokemon(int jugadorX, int jugadorY)
+    bool CazarPokemon(int jugadorX, int jugadorY, Position playerPos)
     {
-        if (casillas[jugadorY - 1][jugadorX] == POKEMON || casillas[jugadorY + 1][jugadorX] == POKEMON
-            || casillas[jugadorY][jugadorX + 1] == POKEMON || casillas[jugadorY][jugadorX - 1] == POKEMON)
-        {
-            if (casillas[jugadorY - 1][jugadorX] == POKEMON)
-                casillas[jugadorY - 1][jugadorX] = VACIO;
-            else if (casillas[jugadorY + 1][jugadorX] == POKEMON)
-                casillas[jugadorY + 1][jugadorX] = VACIO;
-            else if (casillas[jugadorY][jugadorX + 1] == POKEMON)
-                casillas[jugadorY][jugadorX + 1] = VACIO;
-            else if (casillas[jugadorY][jugadorX - 1] == POKEMON)
-                casillas[jugadorY][jugadorX - 1] = VACIO;
+        //if(Ash PokeBall == 1) {
+            if (casillas[jugadorY - 1][jugadorX] == POKEMON || casillas[jugadorY + 1][jugadorX] == POKEMON
+                || casillas[jugadorY][jugadorX + 1] == POKEMON || casillas[jugadorY][jugadorX - 1] == POKEMON)
+            {
+                if (casillas[jugadorY - 1][jugadorX] == POKEMON)
+                    casillas[jugadorY - 1][jugadorX] = VACIO;
+                else if (casillas[jugadorY + 1][jugadorX] == POKEMON)
+                    casillas[jugadorY + 1][jugadorX] = VACIO;
+                else if (casillas[jugadorY][jugadorX + 1] == POKEMON)
+                    casillas[jugadorY][jugadorX + 1] = VACIO;
+                else if (casillas[jugadorY][jugadorX - 1] == POKEMON)
+                    casillas[jugadorY][jugadorX - 1] = VACIO;
+                    
 
-            // Generar una nueva posición aleatoria para un Pokémon
-            int nuevoPokemonX, nuevoPokemonY;
-            do {
-                nuevoPokemonX = rand() % (limiteMapa_x - 1) + 1;
-                nuevoPokemonY = rand() % (limiteMapa_y - 1) + 1;
-            } while (casillas[nuevoPokemonY][nuevoPokemonX] != VACIO);
+                    // Generar una nueva posición aleatoria para un Pokémon
 
-            casillas[nuevoPokemonY][nuevoPokemonX] = POKEMON; // Colocar el nuevo Pokémon
-            return true;
-        }
-        return false;
+                int nuevoPokemonX, nuevoPokemonY;
+                do {
+                    nuevoPokemonX = rand() % (limiteMapa_x - 1) + 1;
+                    nuevoPokemonY = rand() % (limiteMapa_y - 1) + 1;
+                } while (casillas[nuevoPokemonY][nuevoPokemonX] != VACIO);
+
+                casillas[nuevoPokemonY][nuevoPokemonX] = POKEMON; // Colocar el nuevo Pokémon
+              
+
+                // Mostrar la pantalla actualizada
+                PintarVista(playerPos);
+                // Congelar la pantalla hasta que el usuario presione una tecla
+                std::cout << "Presiona cualquier tecla para continuar...";
+                _getch(); // Espera a que el usuario presione una tecla
+
+                return true;
+            }
+            return false;
+        //}
     }
 
     void PintarVista(Position playerPos)
