@@ -17,10 +17,17 @@ int main() {
         mapa.casillas[ash.pos.y][ash.pos.x] = ash.AshLook;
 
         mapa.GestionarPokemons();
+        mapa.GestionarPokeBalls();
         //Comprobar si se caza un pokemon
         if (mapa.CazarPokemon(ash.pos.x, ash.pos.y))
         {
             ash.Pokimon += 1;
+        }
+
+        //Comprobar si se consigue una PokeBall
+        if (mapa.RecogerPokeball(ash.pos.x, ash.pos.y))
+        {
+            ash.PokeBall += 1;
         }
 
         //desbloqueo zona 2

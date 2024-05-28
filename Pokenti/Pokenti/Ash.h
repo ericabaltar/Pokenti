@@ -6,6 +6,7 @@
 
 struct Ash {
     int Pokimon;
+    int PokeBall;
     enum AshMovement { UP, DOWN, LEFT, RIGHT, NONE };
     AshMovement currentMove;
     Position pos;
@@ -13,6 +14,7 @@ struct Ash {
     char AshLook;
     Ash() {
         this->Pokimon = 0;
+        this->PokeBall = 0;
         this->pos.x = this->prevPos.x = 2;
         this->pos.y = this->prevPos.y = 2;
         this->AshLook = '^';

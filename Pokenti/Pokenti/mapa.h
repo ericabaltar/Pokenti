@@ -24,31 +24,33 @@ struct Mapa
     const char PARED = 'X';
     const char SEPARADOR = 'x';
     const char POKEMON = 'P';
+    const char POKEBALL = 'O';
+    int contadorPokeballs = 0;
     const int RANGO_VISTA_JUGADOR_X = 22;
     const int RANGO_VISTA_JUGADOR_Y = 12;
     char** casillas;
 
     Mapa() {
+        // Inicializar la semilla de números aleatorios
+        srand(time(0));
 
+        //leer datos del fichero
+        ifstream myFile("config.txt");
+        if (!myFile.is_open())
         {
-            //leer datos del fichero
-            ifstream myFile("config.txt");
-            if (!myFile.is_open())
-            {
-                cout << "CAGASTE";
-                abort();
-            }
-
-            char aux;
-            myFile >> FILAS >> aux >> COLUMNAS >> aux;
-            myFile >> FIRST_AREA_POK >> aux >> FIRST_AREA_MIN_POK >> aux;
-            myFile >> SECOND_AREA_POK >> aux >> SECOND_AREA_MIN_POK >> aux;
-
-            myFile.close();
+            cout << "CAGASTE";
+            abort();
         }
 
+        char aux;
+        myFile >> FILAS >> aux >> COLUMNAS >> aux;
+        myFile >> FIRST_AREA_POK >> aux >> FIRST_AREA_MIN_POK >> aux;
+        myFile >> SECOND_AREA_POK >> aux >> SECOND_AREA_MIN_POK >> aux;
+
+        myFile.close();
+
         limiteMapa_x = COLUMNAS;
-        limiteMapa_y = FILAS/2;
+        limiteMapa_y = FILAS / 2;
         limiteMov_X = COLUMNAS / 2 + 1;
         limiteMov_Y = FILAS / 2 + 1;
 
@@ -96,7 +98,6 @@ struct Mapa
                 casillas[i][j] = VACIO;
             }
         }
-        
 
         // Agregar los seis pokémons aleatoriamente en el Pueblo Paleta
         for (int i = 0; i < FIRST_AREA_POK; i++) {
@@ -116,9 +117,12 @@ struct Mapa
                 nuevoPokemonX = rand() % (COLUMNAS / 2 - 1) + COLUMNAS / 2 - 1;
                 nuevoPokemonY = rand() % (FILAS / 2 - 1) + 1;
             } while (casillas[nuevoPokemonY][nuevoPokemonX] != VACIO);
-            
+
             casillas[nuevoPokemonY][nuevoPokemonX] = POKEMON; // Colocar el nuevo Pokémon
         }
+
+        // Inicializar una Pokeball en una posición aleatoria
+        GestionarPokeBalls();
     }
 
     ~Mapa()
@@ -129,12 +133,72 @@ struct Mapa
         delete[] casillas;
     }
 
+    void GestionarPokeBalls()
+    {
+        // Contar la cantidad de pokémons presentes en el mapa
+        int PokeBallsPresentesZona1 = 0;
+        for (int i = 0; i < FILAS / 2; ++i) {
+            for (int j = 0; j < COLUMNAS / 2; ++j) {
+                if (casillas[i][j] == POKEBALL) {
+                    PokeBallsPresentesZona1++;
+                }
+            }
+        }
+        // Si hay menos de 1 PokeBall, generar y colocar una nueva
+        if (PokeBallsPresentesZona1 < 1) {
+            int nuevaPokeBallX, nuevaPokeBallY;
+            do {
+                nuevaPokeBallX = rand() % (COLUMNAS / 2 - 1) + 1;
+                nuevaPokeBallY = rand() % (FILAS / 2 - 1) + 1;
+            } while (casillas[nuevaPokeBallY][nuevaPokeBallX] != VACIO);
+
+            casillas[nuevaPokeBallY][nuevaPokeBallX] = POKEBALL; // Colocar la nueva PokeBall
+        }
+
+        int PokeBallsPresentesZona2 = 0;
+        for (int i = 0; i < FILAS / 2; ++i) {
+            for (int j = COLUMNAS / 2; j < COLUMNAS; ++j) {
+                if (casillas[i][j] == POKEBALL) {
+                    PokeBallsPresentesZona2++;
+                }
+            }
+        }
+        // Si hay menos de 18 pokémons, generar y colocar uno nuevo
+        if (PokeBallsPresentesZona2 < 1) {
+            int nuevaPokeBallX, nuevaPokeBallY;
+            do {
+                nuevaPokeBallX = rand() % (COLUMNAS / 2 - 1) + COLUMNAS / 2 - 1;
+                nuevaPokeBallY = rand() % (FILAS / 2 - 1) + 1;
+            } while (casillas[nuevaPokeBallY][nuevaPokeBallX] != VACIO);
+
+            casillas[nuevaPokeBallY][nuevaPokeBallX] = POKEBALL; // Colocar el nuevo Pokémon
+        }
+    
+    }
+
+    bool RecogerPokeball(int jugadorX, int jugadorY)
+    {
+        if (casillas[jugadorY][jugadorX] == POKEBALL)
+        {
+            // Generar una nueva posición aleatoria para una PokeBall
+            int nuevaPokeBallX, nuevaPokeBallY;
+            do {
+                nuevaPokeBallX = rand() % (limiteMapa_x - 1) + 1;
+                nuevaPokeBallY = rand() % (limiteMapa_y - 1) + 1;
+            } while (casillas[nuevaPokeBallY][nuevaPokeBallX] != VACIO);
+
+            casillas[nuevaPokeBallX][nuevaPokeBallX] = POKEBALL; // Colocar el nuevo Pokémon
+            return true;
+        }
+        return false;
+    }
+
     void GestionarPokemons()
     {
         // Contar la cantidad de pokémons presentes en el mapa
         int pokemonsPresentesZona1 = 0;
-        for (int i = 0; i < FILAS/2; ++i) {
-            for (int j = 0; j < COLUMNAS/2; ++j) {
+        for (int i = 0; i < FILAS / 2; ++i) {
+            for (int j = 0; j < COLUMNAS / 2; ++j) {
                 if (casillas[i][j] == POKEMON) {
                     pokemonsPresentesZona1++;
                 }
@@ -144,15 +208,15 @@ struct Mapa
         if (pokemonsPresentesZona1 < FIRST_AREA_POK) {
             int nuevoPokemonX, nuevoPokemonY;
             do {
-                nuevoPokemonX = rand() % (COLUMNAS/2 - 1) + 1;
-                nuevoPokemonY = rand() % (FILAS/2 - 1) + 1;
+                nuevoPokemonX = rand() % (COLUMNAS / 2 - 1) + 1;
+                nuevoPokemonY = rand() % (FILAS / 2 - 1) + 1;
             } while (casillas[nuevoPokemonY][nuevoPokemonX] != VACIO);
 
             casillas[nuevoPokemonY][nuevoPokemonX] = POKEMON; // Colocar el nuevo Pokémon
         }
         int pokemonsPresentesZona2 = 0;
-        for (int i = 0; i < FILAS/2; ++i) {
-            for (int j = COLUMNAS/2; j < COLUMNAS; ++j) {
+        for (int i = 0; i < FILAS / 2; ++i) {
+            for (int j = COLUMNAS / 2; j < COLUMNAS; ++j) {
                 if (casillas[i][j] == POKEMON) {
                     pokemonsPresentesZona2++;
                 }
@@ -162,8 +226,8 @@ struct Mapa
         if (pokemonsPresentesZona2 < SECOND_AREA_POK) {
             int nuevoPokemonX, nuevoPokemonY;
             do {
-                nuevoPokemonX = rand() % (COLUMNAS/2 - 1) + COLUMNAS/2-1;
-                nuevoPokemonY = rand() % (FILAS/2 - 1) + 1;
+                nuevoPokemonX = rand() % (COLUMNAS / 2 - 1) + COLUMNAS / 2 - 1;
+                nuevoPokemonY = rand() % (FILAS / 2 - 1) + 1;
             } while (casillas[nuevoPokemonY][nuevoPokemonX] != VACIO);
 
             casillas[nuevoPokemonY][nuevoPokemonX] = POKEMON; // Colocar el nuevo Pokémon
@@ -175,13 +239,13 @@ struct Mapa
         if (casillas[jugadorY - 1][jugadorX] == POKEMON || casillas[jugadorY + 1][jugadorX] == POKEMON
             || casillas[jugadorY][jugadorX + 1] == POKEMON || casillas[jugadorY][jugadorX - 1] == POKEMON)
         {
-            if(casillas[jugadorY - 1][jugadorX] == POKEMON) 
+            if (casillas[jugadorY - 1][jugadorX] == POKEMON)
                 casillas[jugadorY - 1][jugadorX] = VACIO;
-            else if(casillas[jugadorY + 1][jugadorX] == POKEMON) 
+            else if (casillas[jugadorY + 1][jugadorX] == POKEMON)
                 casillas[jugadorY + 1][jugadorX] = VACIO;
-            else if(casillas[jugadorY][jugadorX + 1] == POKEMON) 
+            else if (casillas[jugadorY][jugadorX + 1] == POKEMON)
                 casillas[jugadorY][jugadorX + 1] = VACIO;
-            else if(casillas[jugadorY][jugadorX - 1] == POKEMON) 
+            else if (casillas[jugadorY][jugadorX - 1] == POKEMON)
                 casillas[jugadorY][jugadorX - 1] = VACIO;
 
             // Generar una nueva posición aleatoria para un Pokémon
@@ -230,6 +294,9 @@ struct Mapa
                 case 'P':
                     SetConsoleTextAttribute(hConsole, 13); // Rosa
                     break;
+                case 'O':
+                    SetConsoleTextAttribute(hConsole, 14); // Amarillo
+                    break;
                 default:
                     SetConsoleTextAttribute(hConsole, 15); // Blanco
                     break;
@@ -240,7 +307,7 @@ struct Mapa
             cout << endl;
         }
     }
-    
+
     void PintarTodo()
     {
         HANDLE hConsole = GetStdHandle(STD_OUTPUT_HANDLE);
@@ -271,6 +338,9 @@ struct Mapa
                 case 'P':
                     SetConsoleTextAttribute(hConsole, 13); // Rosa
                     break;
+                case 'O':
+                    SetConsoleTextAttribute(hConsole, 14); // Amarillo
+                    break;
                 default:
                     SetConsoleTextAttribute(hConsole, 15); // Blanco
                     break;
@@ -285,26 +355,26 @@ struct Mapa
     void UnlockBosque()
     {
         //aumentar limites de la camara (y el player)
-        limiteMapa_x = COLUMNAS-1;
-        limiteMov_X = COLUMNAS-1;
+        limiteMapa_x = COLUMNAS - 1;
+        limiteMov_X = COLUMNAS - 1;
         //borrar la barrera
-        for (int i = 1; i < FILAS/2; ++i) {
-            casillas[i][COLUMNAS/2] = VACIO;            
+        for (int i = 1; i < FILAS / 2; ++i) {
+            casillas[i][COLUMNAS / 2] = VACIO;
         }
     }
     void UnlockCueva()
     {
         //aumentar limites de la camara (y el player)
-        limiteMapa_x = COLUMNAS-1;
-        limiteMov_X = COLUMNAS-1;
-        limiteMov_Y = FILAS-1;
-        limiteMapa_y = FILAS-1;
+        limiteMapa_x = COLUMNAS - 1;
+        limiteMov_X = COLUMNAS - 1;
+        limiteMov_Y = FILAS - 1;
+        limiteMapa_y = FILAS - 1;
         //borrar barreras
-        for (int i = FILAS / 2; i < FILAS-1; ++i) {
+        for (int i = FILAS / 2; i < FILAS - 1; ++i) {
             casillas[i][COLUMNAS / 2] = VACIO;
         }
-        for (int i = 1; i < COLUMNAS-1; ++i) {
-            casillas[FILAS/2][i] = VACIO;            
+        for (int i = 1; i < COLUMNAS - 1; ++i) {
+            casillas[FILAS / 2][i] = VACIO;
         }
     }
 };
