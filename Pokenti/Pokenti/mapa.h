@@ -1,3 +1,4 @@
+#pragma once
 #include <iostream>
 #include <fstream>
 #include <Windows.h>
@@ -46,7 +47,10 @@ struct Mapa
         ifstream myFile("config.txt");
         if (!myFile.is_open())
         {
-            cout << "CAGASTE";
+            cout << "Lamentablemente, ha surgido un inconveniente al intentar abrir el archivo 'config.txt'.\n";
+            cout << "Por favor, tómese un momento para verificar que el archivo exista y contenga los datos necesarios.\n";
+            cout << "Si el problema persiste, no dude en comunicarse con el administrador del sistema para recibir asistencia adicional.\n";
+            cout << "¡Gracias por su comprensión y colaboración!\n";
             abort();
         }
 
@@ -61,7 +65,7 @@ struct Mapa
         myFile.close();
 
         limiteMapa_x = COLUMNAS;
-        limiteMapa_y = FILAS / 2;
+        limiteMapa_y = FILAS;
         limiteMov_X = COLUMNAS / 2 + 1;
         limiteMov_Y = FILAS / 2 + 1;
 
@@ -247,10 +251,11 @@ struct Mapa
 
     bool CazarPokemon(int jugadorX, int jugadorY, Position playerPos)
     {
-        //if(Ash PokeBall == 1) {
+
             if (casillas[jugadorY - 1][jugadorX] == POKEMON || casillas[jugadorY + 1][jugadorX] == POKEMON
                 || casillas[jugadorY][jugadorX + 1] == POKEMON || casillas[jugadorY][jugadorX - 1] == POKEMON)
-            {
+           
+        {
                 if (casillas[jugadorY - 1][jugadorX] == POKEMON)
                     casillas[jugadorY - 1][jugadorX] = VACIO;
                 else if (casillas[jugadorY + 1][jugadorX] == POKEMON)
@@ -266,22 +271,15 @@ struct Mapa
                 int nuevoPokemonX, nuevoPokemonY;
                 do {
                     nuevoPokemonX = rand() % (limiteMapa_x - 1) + 1;
-                    nuevoPokemonY = rand() % (limiteMapa_y - 1) + 1;
+                    nuevoPokemonY = rand() % (FILAS/2 - 1) + 1;
                 } while (casillas[nuevoPokemonY][nuevoPokemonX] != VACIO);
 
                 casillas[nuevoPokemonY][nuevoPokemonX] = POKEMON; // Colocar el nuevo Pokémon
               
 
-                // Mostrar la pantalla actualizada
-                PintarVista(playerPos);
-                // Congelar la pantalla hasta que el usuario presione una tecla
-                std::cout << "Presiona cualquier tecla para continuar...";
-                _getch(); // Espera a que el usuario presione una tecla
-
                 return true;
             }
             return false;
-        //}
     }
 
     void PintarVista(Position playerPos)
@@ -380,6 +378,7 @@ struct Mapa
         //aumentar limites de la camara (y el player)
         limiteMapa_x = COLUMNAS - 1;
         limiteMov_X = COLUMNAS - 1;
+        limiteMapa_y = FILAS - 1;
         //borrar la barrera
         for (int i = 1; i < FILAS / 2; ++i) {
             casillas[i][COLUMNAS / 2] = VACIO;
@@ -392,11 +391,8 @@ struct Mapa
         limiteMov_X = COLUMNAS - 1;
         limiteMov_Y = FILAS - 1;
         limiteMapa_y = FILAS - 1;
-        //borrar barreras
-        for (int i = FILAS / 2; i < FILAS - 1; ++i) {
-            casillas[i][COLUMNAS / 2] = VACIO;
-        }
-        for (int i = 1; i < COLUMNAS - 1; ++i) {
+        // Borrar barreras
+        for (int i = COLUMNAS / 2; i < COLUMNAS - 1; ++i) {
             casillas[FILAS / 2][i] = VACIO;
         }
     }

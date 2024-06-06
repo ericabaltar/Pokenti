@@ -2,6 +2,7 @@
 #include<iostream>
 #include <Windows.h>
 #include "Types.h"
+#include "mapa.h"
 
 
 struct Ash {
@@ -78,8 +79,10 @@ struct Ash {
      {
          std::cout << AshLook << std::endl;
      }*/
-    void MoveAsh(int mapBorderX, int mapBorderY) {
-        if (GetAsyncKeyState(VK_UP))
+    void MoveAsh(int mapBorderX, int mapBorderY, Mapa& mapa) {
+        if (GetAsyncKeyState(VK_SPACE))
+            mapa.CazarPokemon(pos.x, pos.y, pos);
+        else if (GetAsyncKeyState(VK_UP))
             currentMove = AshMovement::UP;
         else if (GetAsyncKeyState(VK_DOWN))
             currentMove = AshMovement::DOWN;

@@ -1,5 +1,5 @@
-#include "mapa.h"
 #include "Ash.h"
+#include "mapa.h"
 
 int main() {
     // Inicializar la semilla de generación aleatoria
@@ -12,7 +12,7 @@ int main() {
     bool cuevaBloqueado = true;
 
     while (true) {
-        ash.MoveAsh(mapa.limiteMov_X, mapa.limiteMov_Y);
+        ash.MoveAsh(mapa.limiteMov_X, mapa.limiteMov_Y, mapa);
         mapa.casillas[ash.prevPos.y][ash.prevPos.x] = mapa.VACIO;
         mapa.casillas[ash.pos.y][ash.pos.x] = ash.AshLook;
 
