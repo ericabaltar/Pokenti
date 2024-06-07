@@ -127,11 +127,19 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="Ash.cpp" />
+    <ClCompile Include="FileReader.cpp" />
     <ClCompile Include="Main.cpp" />
+    <ClCompile Include="Mapa.cpp" />
+    <ClCompile Include="Pokeball.cpp" />
+    <ClCompile Include="Pokemons.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Ash.h" />
+    <ClInclude Include="FileReader.h" />
     <ClInclude Include="mapa.h" />
+    <ClInclude Include="Pokeball.h" />
+    <ClInclude Include="Pokemons.h" />
     <ClInclude Include="Types.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
