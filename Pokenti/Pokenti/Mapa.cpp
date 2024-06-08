@@ -1,5 +1,5 @@
 #include "mapa.h"
-#include "FileReader.h"
+
 
 Mapa :: Mapa(const Settings& settings) {
     // Inicializar la semilla de números aleatorios
@@ -88,9 +88,6 @@ Mapa :: Mapa(const Settings& settings) {
 
         casillas[nuevoPokemonY][nuevoPokemonX] = POKEMON; // Colocar el nuevo Pokémon
     }
-
-    // Inicializar una Pokeball en una posición aleatoria
-    GestionarPokeBalls();
 }
 
 Mapa ::~Mapa()
@@ -99,140 +96,6 @@ Mapa ::~Mapa()
         delete[] casillas[i];
     }
     delete[] casillas;
-}
-
-void Mapa::GestionarPokeBalls()
-{
-    // Contar la cantidad de pokémons presentes en el mapa
-    int PokeBallsPresentesZona1 = 0;
-    for (int i = 0; i < FILAS / 2; ++i) {
-        for (int j = 0; j < COLUMNAS / 2; ++j) {
-            if (casillas[i][j] == POKEBALL) {
-                PokeBallsPresentesZona1++;
-            }
-        }
-    }
-    // Si hay menos de 1 PokeBall, generar y colocar una nueva
-    if (PokeBallsPresentesZona1 < 1) {
-        int nuevaPokeBallX, nuevaPokeBallY;
-        do {
-            nuevaPokeBallX = rand() % (COLUMNAS / 2 - 1) + 1;
-            nuevaPokeBallY = rand() % (FILAS / 2 - 1) + 1;
-        } while (casillas[nuevaPokeBallY][nuevaPokeBallX] != VACIO);
-
-        casillas[nuevaPokeBallY][nuevaPokeBallX] = POKEBALL; // Colocar la nueva PokeBall
-    }
-
-    int PokeBallsPresentesZona2 = 0;
-    for (int i = 0; i < FILAS / 2; ++i) {
-        for (int j = COLUMNAS / 2; j < COLUMNAS; ++j) {
-            if (casillas[i][j] == POKEBALL) {
-                PokeBallsPresentesZona2++;
-            }
-        }
-    }
-    // Si hay menos de 18 pokémons, generar y colocar uno nuevo
-    if (PokeBallsPresentesZona2 < 1) {
-        int nuevaPokeBallX, nuevaPokeBallY;
-        do {
-            nuevaPokeBallX = rand() % (COLUMNAS / 2 - 1) + COLUMNAS / 2 - 1;
-            nuevaPokeBallY = rand() % (FILAS / 2 - 1) + 1;
-        } while (casillas[nuevaPokeBallY][nuevaPokeBallX] != VACIO);
-
-        casillas[nuevaPokeBallY][nuevaPokeBallX] = POKEBALL; // Colocar el nuevo Pokémon
-    }
-
-}
-
-bool Mapa::RecogerPokeball(int jugadorX, int jugadorY)
-{
-    if (casillas[jugadorY][jugadorX] == POKEBALL)
-    {
-        // Generar una nueva posición aleatoria para una PokeBall
-        int nuevaPokeBallX, nuevaPokeBallY;
-        do {
-            nuevaPokeBallX = rand() % (limiteMapa_x - 1) + 1;
-            nuevaPokeBallY = rand() % (limiteMapa_y - 1) + 1;
-        } while (casillas[nuevaPokeBallY][nuevaPokeBallX] != VACIO);
-
-        casillas[nuevaPokeBallX][nuevaPokeBallX] = POKEBALL; // Colocar el nuevo Pokémon
-        return true;
-    }
-    return false;
-}
-
-void Mapa::GestionarPokemons()
-{
-    // Contar la cantidad de pokémons presentes en el mapa
-    int pokemonsPresentesZona1 = 0;
-    for (int i = 0; i < FILAS / 2; ++i) {
-        for (int j = 0; j < COLUMNAS / 2; ++j) {
-            if (casillas[i][j] == POKEMON) {
-                pokemonsPresentesZona1++;
-            }
-        }
-    }
-    // Si hay menos de 6 pokémons, generar y colocar uno nuevo
-    if (pokemonsPresentesZona1 < FIRST_AREA_POKE) {
-        int nuevoPokemonX, nuevoPokemonY;
-        do {
-            nuevoPokemonX = rand() % (COLUMNAS / 2 - 1) + 1;
-            nuevoPokemonY = rand() % (FILAS / 2 - 1) + 1;
-        } while (casillas[nuevoPokemonY][nuevoPokemonX] != VACIO);
-
-        casillas[nuevoPokemonY][nuevoPokemonX] = POKEMON; // Colocar el nuevo Pokémon
-    }
-    int pokemonsPresentesZona2 = 0;
-    for (int i = 0; i < FILAS / 2; ++i) {
-        for (int j = COLUMNAS / 2; j < COLUMNAS; ++j) {
-            if (casillas[i][j] == POKEMON) {
-                pokemonsPresentesZona2++;
-            }
-        }
-    }
-    // Si hay menos de 18 pokémons, generar y colocar uno nuevo
-    if (pokemonsPresentesZona2 < SECOND_AREA_POKE) {
-        int nuevoPokemonX, nuevoPokemonY;
-        do {
-            nuevoPokemonX = rand() % (COLUMNAS / 2 - 1) + COLUMNAS / 2 - 1;
-            nuevoPokemonY = rand() % (FILAS / 2 - 1) + 1;
-        } while (casillas[nuevoPokemonY][nuevoPokemonX] != VACIO);
-
-        casillas[nuevoPokemonY][nuevoPokemonX] = POKEMON; // Colocar el nuevo Pokémon
-    }
-}
-
-bool Mapa::CazarPokemon(int jugadorX, int jugadorY, Position playerPos)
-{
-
-    if (casillas[jugadorY - 1][jugadorX] == POKEMON || casillas[jugadorY + 1][jugadorX] == POKEMON
-        || casillas[jugadorY][jugadorX + 1] == POKEMON || casillas[jugadorY][jugadorX - 1] == POKEMON)
-
-    {
-        if (casillas[jugadorY - 1][jugadorX] == POKEMON)
-            casillas[jugadorY - 1][jugadorX] = VACIO;
-        else if (casillas[jugadorY + 1][jugadorX] == POKEMON)
-            casillas[jugadorY + 1][jugadorX] = VACIO;
-        else if (casillas[jugadorY][jugadorX + 1] == POKEMON)
-            casillas[jugadorY][jugadorX + 1] = VACIO;
-        else if (casillas[jugadorY][jugadorX - 1] == POKEMON)
-            casillas[jugadorY][jugadorX - 1] = VACIO;
-
-
-        // Generar una nueva posición aleatoria para un Pokémon
-
-        int nuevoPokemonX, nuevoPokemonY;
-        do {
-            nuevoPokemonX = rand() % (limiteMapa_x - 1) + 1;
-            nuevoPokemonY = rand() % (FILAS / 2 - 1) + 1;
-        } while (casillas[nuevoPokemonY][nuevoPokemonX] != VACIO);
-
-        casillas[nuevoPokemonY][nuevoPokemonX] = POKEMON; // Colocar el nuevo Pokémon
-
-
-        return true;
-    }
-    return false;
 }
 
 void Mapa::PintarVista(Position playerPos)
@@ -266,10 +129,13 @@ void Mapa::PintarVista(Position playerPos)
                 SetConsoleTextAttribute(hConsole, 9); // Azul
                 break;
             case 'P':
-                SetConsoleTextAttribute(hConsole, 13); // Rosa
+                SetConsoleTextAttribute(hConsole, 10); // Rosa
                 break;
             case 'O':
                 SetConsoleTextAttribute(hConsole, 14); // Amarillo
+                break;
+            case 'M':
+                SetConsoleTextAttribute(hConsole, 13); // Amarillo
                 break;
             default:
                 SetConsoleTextAttribute(hConsole, 15); // Blanco

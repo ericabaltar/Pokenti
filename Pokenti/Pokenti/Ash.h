@@ -4,6 +4,7 @@
 #include "Types.h"
 #include "mapa.h"
 #include "Pokemons.h"
+#include "FileReader.h"
 
 class Mapa;
 class Pokemons;
@@ -20,6 +21,7 @@ enum class AshMovement
 
 struct Ash
 {
+    public:
     int Pokimon;
     int PokeBall;
     Position pos;
@@ -29,7 +31,7 @@ struct Ash
 
     Ash();
     void SetAshPos(int mapBorderX, int mapBorderY);
-    void MoveAsh(int mapBorderX, int mapBorderY, Mapa& mapa, Pokemons& pokemons);
-
+    void MoveAsh(int mapBorderX, int mapBorderY, Mapa& mapa, Pokemons& pokemons, Ash& ash, Settings& settings);
+    bool PokemonEncontrado(Mapa& mapa);
 };
 

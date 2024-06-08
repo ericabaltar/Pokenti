@@ -1,9 +1,8 @@
 #include "Ash.h"
-#include "mapa.h"
-#include "Pokemons.h"
+
 
 Ash::Ash() {
-    Pokimon = 14;
+    Pokimon = 20;
     PokeBall = 0;
     pos.x = this->prevPos.x = 2;
     pos.y = this->prevPos.y = 2;
@@ -52,18 +51,27 @@ void Ash::SetAshPos(int mapBorderX, int mapBorderY) {
     currentMove = AshMovement::NONE;
 }
 
-void Ash::MoveAsh(int mapBorderX, int mapBorderY, Mapa& mapa, Pokemons& pokemons) {
+bool Ash::PokemonEncontrado(Mapa& mapa) {
+    return (mapa.casillas[pos.y - 1][pos.x] == mapa.POKEMON ||
+        mapa.casillas[pos.y + 1][pos.x] == mapa.POKEMON ||
+        mapa.casillas[pos.y][pos.x + 1] == mapa.POKEMON ||
+        mapa.casillas[pos.y][pos.x - 1] == mapa.POKEMON);
+}
+
+void Ash::MoveAsh(int mapBorderX, int mapBorderY, Mapa& mapa, Pokemons& pokemons, Ash& ash, Settings& settings) {
     if (GetAsyncKeyState(VK_SPACE))
-        pokemons.CazarPokemon(pos.x, pos.y, pos, mapa, pokemons);
-    else if (GetAsyncKeyState(VK_UP))
+        pokemons.CazarPokemon(pos.x, pos.y, pos, mapa, pokemons, ash, settings);
+    else if (GetAsyncKeyState(VK_UP) && (mapa.casillas[pos.y - 1][pos.x] != mapa.POKEMON && mapa.casillas[pos.y - 1][pos.x] != mapa.MEWTWO))
         currentMove = AshMovement::UP;
-    else if (GetAsyncKeyState(VK_DOWN))
+    else if (GetAsyncKeyState(VK_DOWN) && (mapa.casillas[pos.y + 1][pos.x] != mapa.POKEMON && mapa.casillas[pos.y + 1][pos.x] != mapa.MEWTWO))
         currentMove = AshMovement::DOWN;
-    else if (GetAsyncKeyState(VK_LEFT))
+    else if (GetAsyncKeyState(VK_LEFT) && (mapa.casillas[pos.y][pos.x - 1] != mapa.POKEMON && mapa.casillas[pos.y][pos.x - 1] != mapa.MEWTWO))
         currentMove = AshMovement::LEFT;
-    else if (GetAsyncKeyState(VK_RIGHT))
+    else if (GetAsyncKeyState(VK_RIGHT) && (mapa.casillas[pos.y][pos.x + 1] != mapa.POKEMON && mapa.casillas[pos.y][pos.x + 1] != mapa.MEWTWO))
         currentMove = AshMovement::RIGHT;
 
     SetAshPos(mapBorderX, mapBorderY);
 }
+
+
 

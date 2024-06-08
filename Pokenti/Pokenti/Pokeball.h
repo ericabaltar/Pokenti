@@ -1,8 +1,13 @@
 #pragma once
 #include "mapa.h"
+#include "Ash.h"
+
+class Ash;
+class Mapa;
 
 class PokeBall {
 public:
     PokeBall(); // Constructor
-    bool RecogerPokeball(int limiteMapa_x, int limiteMapa_y, char** casillas);
+     void GestionarPokeBalls(Mapa& mapa);
+     bool VerificarPokeball(int jugadorX, int jugadorY, Mapa& mapa, Position ashPos, Ash& ash);
 };

@@ -6,17 +6,14 @@
 #include "Types.h"
 #include "Ash.h"
 #include "FileReader.h"
-
+#include "Pokeball.h"
 
 
 enum class Direction
 {
     UP,
-
     DOWN, 
-
     LEFT, 
-
     RIGHT 
 };
 
@@ -43,6 +40,7 @@ struct Mapa
     const char SEPARADOR = 'x';
     const char POKEMON = 'P';
     const char POKEBALL = 'O';
+    const char MEWTWO = 'M';
     int contadorPokeballs = 0;
     const int RANGO_VISTA_JUGADOR_X = 22;
     const int RANGO_VISTA_JUGADOR_Y = 12;
@@ -50,10 +48,6 @@ struct Mapa
 
     Mapa( const Settings& settings);
     ~Mapa();
-    void GestionarPokeBalls();
-    bool RecogerPokeball(int jugadorX, int jugadorY);
-    void GestionarPokemons();
-    bool CazarPokemon(int jugadorX, int jugadorY, Position playerPos);
     void PintarVista(Position playerPos);
     void PintarTodo();
     void UnlockBosque();
