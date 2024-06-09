@@ -32,6 +32,5 @@ struct Ash
     Ash();
     void SetAshPos(int mapBorderX, int mapBorderY);
     void MoveAsh(int mapBorderX, int mapBorderY, Mapa& mapa, Pokemons& pokemons, Ash& ash, Settings& settings);
-    bool PokemonEncontrado(Mapa& mapa);
 };
 

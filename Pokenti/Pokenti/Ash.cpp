@@ -51,13 +51,6 @@ void Ash::SetAshPos(int mapBorderX, int mapBorderY) {
     currentMove = AshMovement::NONE;
 }
 
-bool Ash::PokemonEncontrado(Mapa& mapa) {
-    return (mapa.casillas[pos.y - 1][pos.x] == mapa.POKEMON ||
-        mapa.casillas[pos.y + 1][pos.x] == mapa.POKEMON ||
-        mapa.casillas[pos.y][pos.x + 1] == mapa.POKEMON ||
-        mapa.casillas[pos.y][pos.x - 1] == mapa.POKEMON);
-}
-
 void Ash::MoveAsh(int mapBorderX, int mapBorderY, Mapa& mapa, Pokemons& pokemons, Ash& ash, Settings& settings) {
     if (GetAsyncKeyState(VK_SPACE))
         pokemons.CazarPokemon(pos.x, pos.y, pos, mapa, pokemons, ash, settings);

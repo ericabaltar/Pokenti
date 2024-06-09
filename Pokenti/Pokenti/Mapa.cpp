@@ -129,13 +129,13 @@ void Mapa::PintarVista(Position playerPos)
                 SetConsoleTextAttribute(hConsole, 9); // Azul
                 break;
             case 'P':
-                SetConsoleTextAttribute(hConsole, 10); // Rosa
+                SetConsoleTextAttribute(hConsole, 10); // Verde
                 break;
             case 'O':
                 SetConsoleTextAttribute(hConsole, 14); // Amarillo
                 break;
             case 'M':
-                SetConsoleTextAttribute(hConsole, 13); // Amarillo
+                SetConsoleTextAttribute(hConsole, 13); // Rosa
                 break;
             default:
                 SetConsoleTextAttribute(hConsole, 15); // Blanco
