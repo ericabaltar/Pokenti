@@ -3,20 +3,80 @@
 #include "Pokeball.h"
 #include "Pokemons.h"
 #include "FileReader.h"
+#include <conio.h>
 
 const int MAX_NUM_FPS = 15;
+
+enum class GameScene
+{
+    SPLASHSCREEN,
+    MAINMENU,
+    GAMEPLAY,
+    GAMEOVER
+};
+
+void ShowMainMenu(GameScene& currentScene) {
+    int selectedOption = 0;
+    bool selectionMade = false;
+
+    while (!selectionMade) {
+        system("cls");
+        std::cout << R"(
+___  ___      _        ___  ___                 
+|  \/  |     (_)       |  \/  |                 
+| .  . | __ _ _ _ __   | .  . | ___ _ __  _   _ 
+| |\/| |/ _` | | '_ \  | |\/| |/ _ \ '_ \| | | |
+| |  | | (_| | | | | | | |  | |  __/ | | | |_| |
+\_|  |_/\__,_|_|_| |_| \_|  |_/\___|_| |_|\__,_|
+                                                                                                                                                     
+)";
+
+        std::cout << (selectedOption == 0 ? "> " : "  ") << "1. Play\n";
+        std::cout << (selectedOption == 1 ? "> " : "  ") << "2. Exit\n";
+        std::cout << "\033[36m";
+        std::cout << R"(
+                                                                     `;,;.;,;.;.'
+                                                                      ..:;:;::;: 
+                                                                ..--''' '' ' ' '''--.  
+                                                              /' .   .'        '.   .`\
+                                                             | /    /            \   '.|
+                                                             | |   :             :    :|
+                                                           .'| |   :             :    :|
+                                                         ,: /\ \.._\ __..===..__/_../ /`.
+                                                        |'' |  :.|  `'          `'  |.'  ::.
+                                                        |   |  ''|    :'';          | ,  `''\
+                                                        |.:  \/  | /'-.`'   ':'.-'\ |  \,   |
+                                                        | '  /  /  | / |...   | \ |  |  |';'|
+                                                         \ _ |:.|  |_\_|`.'   |_/_|  |.:| _ |
+                                                        /,.,.|' \__       . .      __/ '|.,.,\
+                                                             | ':`.`----._____.---'.'   |
+                                                               \   `:"""-------'""' |   |
+                                                               ',-,-',             .'-=,=,)";
+        std::cout << "\033[0m";
+        switch (_getch()) {
+        case 72: // Flecha arriba
+            selectedOption = (selectedOption - 1 + 2) % 2;
+            break;
+        case 80: // Flecha abajo
+            selectedOption = (selectedOption + 1) % 2;
+            break;
+        case 13: // Enter
+            if (selectedOption == 0) {
+                currentScene = GameScene::GAMEPLAY;
+            }
+            else {
+                exit(0);
+            }
+            selectionMade = true;
+            break;
+        }
+    }
+}
 int main() {
     // Inicializar la semilla de generación aleatoria
     srand(time(NULL));
 
-    enum class GameScene
-    {
-        SPLASHSCREEN,
-        MAINMENU,
-        GAMEPLAY,
-        GAMEOVER
-    } currentScene;
-    currentScene = GameScene::SPLASHSCREEN;
+    GameScene currentScene = GameScene::SPLASHSCREEN;
 
     Settings settings;
     FileReader::ReadSettings("config.txt", settings);
@@ -38,15 +98,59 @@ int main() {
         case GameScene::SPLASHSCREEN:
         {
             system("cls");
-            std::cout << "la splash screen xd";
-            splashScreenTimer += 5000000 / MAX_NUM_FPS;
-            if (splashScreenTimer >= 54000000)
-                currentScene = GameScene::GAMEPLAY;
+           std::cout << "\033[38;5;208m";
+           std::cout << R"(                    
+                                ___.
+                              L._, \
+               _.,              <  <\                _
+             ,' '             `.   | \            ( `
+          ../, `.            `  |    .\`.           \ \_
+         ,' ,..  .           _.,'    ||\l            )  '".
+        , ,'   \           ,'.-.`-._,'  |           .  _._`.
+      ,' /      \ \        `' ' `--/   | \          / /   ..\
+    .'  /        \ .         |\__ - _ ,'` `        / /     `.`.
+    |  '          ..         `-...-"  |  `-'      / /        . `.
+    | /           |L__           |    |          / /          `. `.
+   , /            .   .          |    |         / /             ` `
+  / /          ,. ,`._ `-_       |    |  _   ,-' /               ` \
+ / .           \"`_/. `-_ \_,.  ,'    +-' `-'  _,        ..,-.    \`.
+.  '         .-f    ,'   `    '.       \__.---'     _   .'   '     \ \
+' /          `.'    l     .' /          \..      ,_|/   `.  ,'`     L`
+|'      _.-""` `.    \ _,'  `            \ `.___`.'"`-.  , |   |    | \
+||    ,'      `. `.   '       _,...._        `  |    `/ '  |   '     .|
+||  ,'          `. ;.,.---' ,'       `.   `.. `-'  .-' /_ .'    ;_   ||
+|| '              V      / /           `   | `   ,'   ,' '.    !  `. ||
+||/            _,-------7 '              . |  `-'    l         /    `||
+. |          ,' .-   ,' ||               | .-.        `.      .'     ||
+ `'        ,'    `".'    |               |    `.        '. -.'       `' 
+          /      ,'      |               |,'    \-.._,.'/'
+          .     /        .               .       \    .''                                                               
+        .`.    |         `.             /         :_,'.'
+          \ `...\   _     ,'-.        .'         /_.-'
+           `-.__ `,  `'   .  _.>----''.  _  __  /
+                .'        /"'          |  "'   '_
+               /_|.-'\ ,".             '.'`__'-( \
+                 / ,"'"\,'               `/  `-.|"                       
+                                                                         )";
+           std::cout << "\033[0m";
+           std::cout << R"(
+                                                              ____       _    _____       _   _ 
+                                                             |  _ \ ___ | | _| ____|_ __ | |_(_)
+                                                             | |_) / _ \| |/ /  _| | '_ \| __| |
+                                                             |  __/ (_) |   <| |___| | | | |_| |
+                                                             |_|   \___/|_|\_\_____|_| |_|\__|_|
+                                    
+)";
+
+
+
+            Sleep(3000); 
+            currentScene = GameScene::MAINMENU;
         }
             break;
         case GameScene::MAINMENU:
         {
-            //El menu
+            ShowMainMenu(currentScene);
         }
             break;
         case GameScene::GAMEPLAY:
@@ -88,7 +192,54 @@ int main() {
             break;
         case GameScene::GAMEOVER:
         {
-
+            std::cout << "\033[38;5;153m";
+            std::cout << R"(             
+               _,........__                                          
+            ,-'            "`-.                                      
+          ,'                   `-.                                   
+        ,'                        \                                  
+      ,'                           .                                 
+      .'\               ,"".       `                                 
+     ._.'|             / |  `       \                                
+     |   |            `-.'  ||       `.                              
+     |   |            '-._,'||       | \                             
+     .`.,'             `..,'.'       , |`-.                          
+     l                       .'`.  _/  |   `.                        
+     `-.._'-   ,          _ _'   -" \  .     `                       
+`."""""'-.`-...,---------','         `. `....__.                     
+.'        `"-..___      __,'\          \  \     \                    
+\_ .          |   `""""'    `.           . \     \                   
+  `.          |              `.          |  .     L                  
+    `.        |`--...________.'.        j   |     |                  
+      `._    .'      |          `.     .|   ,     |                  
+         `--,\       .            `7""' |  ,      |                  
+            ` `      `            /     |  |      |    _,-'"""`-.    
+             \ `.     .          /      |  '      |  ,'          `.  
+              \  v.__  .        '       .   \    /| /              \ 
+               \/    `""\"""""""`.       \   \  /.''                |
+                `        .        `._ ___,j.  `/ .-       ,---.     |
+                ,`-.      \         ."     `.  |/        j     `    |
+               /    `.     \       /         \ /         |     /    j
+              |       `-.   7-.._ .          |"          '         / 
+              |          `./_    `|          |            .     _,'  
+              `.           / `----|          |-............`---'     
+                \          \      |          |                       
+               ,'           )     `.         |                       
+                7____,,..--'      /          |                       
+                                  `---.__,--.'                     )";
+            std::cout << "\033[0m";
+            std::cout << R"(
+                                                       _____                       ____                 
+                                                      / ____|                     / __ \                
+                                                     | |  __  __ _ _ __ ___   ___| |  | |_   _____ _ __ 
+                                                     | | |_ |/ _` | '_ ` _ \ / _ \ |  | \ \ / / _ \ '__|
+                                                     | |__| | (_| | | | | | |  __/ |__| |\ V /  __/ |   
+                                                      \_____|\__,_|_| |_| |_|\___|\____/  \_/ \___|_|   
+                                                    
+                                                    
+)";
+            Sleep(5000); 
+            currentScene = GameScene::MAINMENU;
         }
             break;
         default:
