@@ -2,7 +2,7 @@
 
 
 Ash::Ash() {
-    Pokimon = 20;
+    Pokimon = 0;
     PokeBall = 0;
     pos.x = this->prevPos.x = 2;
     pos.y = this->prevPos.y = 2;

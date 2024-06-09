@@ -1,8 +1,9 @@
 #include "Pokemons.h"
+#include <cstdlib>
+#include <chrono>
+#include <thread>
 
-
-
-void Pokemons::GestionarPokemons(Mapa& mapa) {
+void Pokemons::GestionarPokemons(Mapa& mapa, Settings& settings) {
     // Contar la cantidad de pokémons presentes en la zona 1 del mapa
     int pokemonsPresentesZona1 = 0;
     for (int i = 0; i < mapa.FILAS / 2; ++i) {
@@ -44,10 +45,73 @@ void Pokemons::GestionarPokemons(Mapa& mapa) {
 
         mapa.casillas[nuevoPokemonY][nuevoPokemonX] = mapa.POKEMON; // Colocar el nuevo Pokémon
     }
+
+    // Mover Pokémons según el tiempo establecido
+    MoverPokemons(mapa, settings);
 }
+
+void Pokemons::MoverPokemons(Mapa& mapa, const Settings& settings) {
+    auto now = std::chrono::system_clock::now();
+    std::chrono::duration<double> elapsed_seconds = now - lastMoveTime;
+
+    int minTime = settings.MIN_TIME_MOVE_POKEMON;
+    int maxTime = settings.MAX_TIME_MOVE_POKEMON;
+    int waitTime = rand() % (maxTime - minTime + 1) + minTime;
+
+    if (elapsed_seconds.count() >= waitTime) {
+        for (int i = 0; i < mapa.FILAS; ++i) {
+            for (int j = 0; j < mapa.COLUMNAS; ++j) {
+                if (mapa.casillas[i][j] == mapa.POKEMON) {
+                    int direction = rand() % 8;
+                    int newX = j, newY = i;
+
+                    switch (direction) {
+                    case 0: // Arriba
+                        newY -= 1;
+                        break;
+                    case 1: // Abajo
+                        newY += 1;
+                        break;
+                    case 2: // Izquierda
+                        newX -= 1;
+                        break;
+                    case 3: // Derecha
+                        newX += 1;
+                        break;
+                    case 4: // Arriba-Izquierda
+                        newX -= 1;
+                        newY -= 1;
+                        break;
+                    case 5: // Arriba-Derecha
+                        newX += 1;
+                        newY -= 1;
+                        break;
+                    case 6: // Abajo-Izquierda
+                        newX -= 1;
+                        newY += 1;
+                        break;
+                    case 7: // Abajo-Derecha
+                        newX += 1;
+                        newY += 1;
+                        break;
+                    }
+
+                    if (newX >= 0 && newX < mapa.COLUMNAS && newY >= 0 && newY < mapa.FILAS && mapa.casillas[newY][newX] == mapa.VACIO) {
+                        mapa.casillas[newY][newX] = mapa.POKEMON;
+                        mapa.casillas[i][j] = mapa.VACIO;
+                    }
+                }
+            }
+        }
+        lastMoveTime = std::chrono::system_clock::now();
+    }
+}
+
+// Los métodos restantes se mantienen sin cambios
+
 bool Pokemons::GestionarMewtwo(int jugadorX, int jugadorY, const Mapa& mapa, Settings& settings) {
     static bool mewtwoAparecido = false; // Variable estática para controlar si Mewtwo ya apareció
-    int mewtwoX = 53;
+    int mewtwoX = 52;
     int mewtwoY = 37;
     if (!mewtwoAparecido) { // Verificar si Mewtwo no ha aparecido todavía
 

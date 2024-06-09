@@ -6,7 +6,7 @@
 
 const int MAX_NUM_FPS = 15;
 int main() {
-    // Inicializar la semilla de generación aleatoria
+    // Inicializar la semilla de generaciï¿½n aleatoria
     srand(time(NULL));
 
     enum class GameScene
