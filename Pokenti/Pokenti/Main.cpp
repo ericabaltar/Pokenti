@@ -159,7 +159,7 @@ int main() {
             mapa.casillas[ash.prevPos.y][ash.prevPos.x] = mapa.VACIO;
             mapa.casillas[ash.pos.y][ash.pos.x] = ash.AshLook;
 
-            pokemons.GestionarPokemons(mapa);
+            pokemons.GestionarPokemons(mapa, settings);
             pokeball.GestionarPokeBalls(mapa);
             pokeball.VerificarPokeball(ash.pos.x, ash.pos.y, mapa, ash.pos, ash);
             pokemons.GestionarMewtwo(ash.pos.x, ash.pos.y, mapa, settings);
