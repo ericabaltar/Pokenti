@@ -32,9 +32,14 @@ public:
     Position pos;
     Position prevPos;
     char AshLook;
+
+    void MoveAsh(int mapBorderX, int mapBorderY, Mapa& mapa, Pokemons& pokemons, Ash& ash, Settings& settings);
+
+private:
+
     AshMovement currentMove;
 
     void SetAshPos(int mapBorderX, int mapBorderY);
-    void MoveAsh(int mapBorderX, int mapBorderY, Mapa& mapa, Pokemons& pokemons, Ash& ash, Settings& settings);
+
 };
 

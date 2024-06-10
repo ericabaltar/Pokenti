@@ -175,11 +175,11 @@ int main() {
             }
 
 
-            if (ash.Pokimon >= settings.SECOND_AREA_MIN_POKE && cuevaBloqueado)
-            {
-                mapa.UnlockCueva();
-                bosqueBloqueado = false;
-            }
+           if (ash.Pokimon >= settings.SECOND_AREA_MIN_POKE && cuevaBloqueado)
+           {
+              mapa.UnlockCueva();
+              bosqueBloqueado = false;
+           }
 
             //mapa.PintarTodo();
             mapa.PintarVista(ash.pos);
