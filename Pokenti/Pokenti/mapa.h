@@ -30,6 +30,13 @@ enum class Casilla {
     DIRECCION_ARRIBA = '^'
 };
 
+enum class Zonas {
+    PUEBLO_PALETA,
+    BOSQUE,
+    CUEVA_CELESTE,
+    LIGA_POKENTI
+};
+
 struct Mapa{
 public:
 

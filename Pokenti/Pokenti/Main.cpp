@@ -30,9 +30,7 @@ void gotoxy(int x, int y)
 void DrawStaticInterface()
 {
     system("cls");
-    
-    gotoxy(0, 0);
-    std::cout << "Pokemons capturados: [N]   Pokeballs: [N]";
+   
     gotoxy(0, 1);
     std::cout << "[Nombre Ciudad]";
     gotoxy(0, 23); 
