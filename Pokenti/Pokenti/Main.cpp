@@ -11,8 +11,11 @@ const int MAX_NUM_FPS = 15;
 enum class GameScene
 {
     SPLASHSCREEN,
+
     MAINMENU,
+
     GAMEPLAY,
+
     GAMEOVER
 };
 
@@ -55,13 +58,13 @@ ___  ___      _        ___  ___
                                                                ',-,-',             .'-=,=,)";
         std::cout << "\033[0m";
         switch (_getch()) {
-        case 72: // Flecha arriba
+        case 72:
             selectedOption = (selectedOption - 1 + 2) % 2;
             break;
-        case 80: // Flecha abajo
+        case 80:
             selectedOption = (selectedOption + 1) % 2;
             break;
-        case 13: // Enter
+        case 13:
             if (selectedOption == 0) {
                 currentScene = GameScene::GAMEPLAY;
             }
@@ -74,7 +77,7 @@ ___  ___      _        ___  ___
     }
 }
 int main() {
-    // Inicializar la semilla de generaci�n aleatoria
+
     srand(time(NULL));
 
     GameScene currentScene = GameScene::SPLASHSCREEN;
@@ -157,21 +160,21 @@ int main() {
         case GameScene::GAMEPLAY:
         {
             ash.MoveAsh(mapa.limiteMov_X, mapa.limiteMov_Y, mapa, pokemons, ash, settings);
-            mapa.casillas[ash.prevPos.y][ash.prevPos.x] = mapa.VACIO;
-            mapa.casillas[ash.pos.y][ash.pos.x] = ash.AshLook;
+            mapa.casillas[ash.prevPos.y][ash.prevPos.x] = static_cast<Casilla>(Casilla::VACIO);
+            mapa.casillas[ash.pos.y][ash.pos.x] = static_cast<Casilla>(ash.AshLook);
 
             pokemons.GestionarPokemons(mapa, settings);
             pokeball.GestionarPokeBalls(mapa, settings);
             pokeball.VerificarPokeball(ash.pos.x, ash.pos.y, mapa, ash.pos, ash, settings);
             pokemons.GestionarMewtwo(ash.pos.x, ash.pos.y, mapa, settings);
-            //desbloqueo zona 2
+
             if (ash.Pokimon >= settings.FIRST_AREA_MIN_POKE && bosqueBloqueado)
             {
                 mapa.UnlockBosque();
                 bosqueBloqueado = false;
             }
 
-            //desbloqueo zona 3
+
             if (ash.Pokimon >= settings.SECOND_AREA_MIN_POKE && cuevaBloqueado)
             {
                 mapa.UnlockCueva();

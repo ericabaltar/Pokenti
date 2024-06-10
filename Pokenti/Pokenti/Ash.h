@@ -9,8 +9,7 @@
 class Mapa;
 class Pokemons;
 
-enum class AshMovement
-{
+enum class AshMovement{
     UP,
 
     DOWN,
@@ -23,9 +22,11 @@ enum class AshMovement
 };
 
 
-struct Ash
-{
-    public:
+struct Ash{
+public:
+
+    Ash();
+
     int Pokimon;
     int PokeBall;
     Position pos;
@@ -33,7 +34,6 @@ struct Ash
     char AshLook;
     AshMovement currentMove;
 
-    Ash();
     void SetAshPos(int mapBorderX, int mapBorderY);
     void MoveAsh(int mapBorderX, int mapBorderY, Mapa& mapa, Pokemons& pokemons, Ash& ash, Settings& settings);
 };

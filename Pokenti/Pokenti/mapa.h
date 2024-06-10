@@ -8,7 +8,27 @@
 #include "FileReader.h"
 #include "Pokeball.h"
 
-//Cierta parte del codigo del constructor tiene que irse para Pokemons.cpp y .h
+enum class Casilla {
+    VACIO = ' ',
+
+    PARED = 'X',
+
+    SEPARADOR = 'x',
+
+    POKEMON = 'P',
+
+    POKEBALL = 'O',
+
+    MEWTWO = 'M',
+
+    DIRECCION_IZQUIERDA = '<',
+
+    DIRECCION_DERECHA = '>',
+
+    DIRECCION_ABAJO = 'v',
+
+    DIRECCION_ARRIBA = '^'
+};
 
 struct Mapa{
 public:
@@ -24,14 +44,12 @@ public:
 
     int limiteMov_X;
     int limiteMov_Y;
-    const char VACIO = ' ';
-    const char PARED = 'X';
-    const char SEPARADOR = 'x';
-    const char POKEMON = 'P';
-    const char POKEBALL = 'O';
-    const char MEWTWO = 'M';
 
-    char** casillas;
+
+
+
+    Casilla** casillas;
+
 
 private:
 
@@ -41,11 +59,6 @@ private:
     int FIRST_AREA_MIN_POKE;
     int SECOND_AREA_POKE;
     int SECOND_AREA_MIN_POKE;
-    int ERICACHU_DAMAGE;
-    int POKEMON_LIFE;
-    int MEWTWO_LIFE;
-    int MIN_TIME_MOVE_POKEMON;
-    int MAX_TIME_MOVE_POKEMON;
 
     int limiteMapa_x;
     int limiteMapa_y;

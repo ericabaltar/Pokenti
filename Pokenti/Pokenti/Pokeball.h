@@ -3,8 +3,8 @@
 #include "Ash.h"
 #include "FileReader.h"
 
-struct Ash;
-struct Mapa;
+class Ash;
+class Mapa;
 
 class PokeBall {
 public:

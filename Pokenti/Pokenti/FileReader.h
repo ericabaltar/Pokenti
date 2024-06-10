@@ -3,7 +3,7 @@
 #include <fstream>
 
 struct Settings {
-//private:
+public:
     int FILAS;
     int COLUMNAS;
     int FIRST_AREA_POKE;

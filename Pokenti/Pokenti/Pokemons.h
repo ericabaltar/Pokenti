@@ -5,8 +5,8 @@
 #include <ctime>
 #include <chrono>
 
-struct Ash;
-struct Mapa;
+class Ash;
+class Mapa;
 
 class Pokemons {
 public:
