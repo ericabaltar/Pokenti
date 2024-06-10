@@ -39,15 +39,33 @@ void DrawStaticInterface()
     std::cout << "ATACAR   CAPTURAR   HUIR";
 }
 
-void UpdateGameStats(const Ash& ash)
+void UpdateGameStats(const Ash& ash, const Zonas& zona)
 {
     // Update the stats at the top
     gotoxy(0, 0); // Position to update Pokemons count
-    std::cout <<" Pokemons capturados: "<< ash.Pokimon; 
-    
+    std::cout << "Pokemons capturados: " << ash.Pokimon;
 
     gotoxy(40, 0);
-    std::cout <<"Pokeballs: " << ash.PokeBall;
+    std::cout << "Pokeballs: " << ash.PokeBall;
+
+    gotoxy(0, 1);
+    std::string zonaNombre;
+    switch (zona)
+    {
+    case Zonas::PUEBLO_PALETA:
+        zonaNombre = "Pueblo Paleta";
+        break;
+    case Zonas::BOSQUE:
+        zonaNombre = "Bosque";
+        break;
+    case Zonas::CUEVA_CELESTE:
+        zonaNombre = "Cueva Celeste";
+        break;
+    case Zonas::LIGA_POKENTI:
+        zonaNombre = "Liga Pokenti";
+        break;
+    }
+    std::cout << "                      [ " << zonaNombre << " ]";
 }
 
 void ShowMainMenu(GameScene& currentScene) {
@@ -219,8 +237,9 @@ int main() {
            }
 
             //mapa.PintarTodo();
-            mapa.PintarVista(ash.pos);
-            UpdateGameStats(ash);
+           mapa.PintarVista(ash.pos);
+           Zonas currentZone = mapa.GetZona(ash.pos);
+           UpdateGameStats(ash, currentZone);
 
 
             Sleep(1000 / MAX_NUM_FPS);

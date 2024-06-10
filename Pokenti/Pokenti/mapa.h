@@ -48,6 +48,7 @@ public:
     void PintarTodo();
     void UnlockBosque();
     void UnlockCueva();
+    Zonas GetZona(const Position& playerPos) const;
 
     int limiteMov_X;
     int limiteMov_Y;

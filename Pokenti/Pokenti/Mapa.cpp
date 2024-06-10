@@ -196,3 +196,21 @@ void Mapa::UnlockCueva() {
         casillas[FILAS / 2][i] = Casilla::VACIO;
     }
 }
+
+Zonas Mapa::GetZona(const Position& playerPos) const {
+    int mitadFilas = FILAS / 2;
+    int mitadColumnas = COLUMNAS / 2;
+
+    if (playerPos.x < mitadColumnas && playerPos.y < mitadFilas) {
+        return Zonas::PUEBLO_PALETA;
+    }
+    else if (playerPos.x >= mitadColumnas && playerPos.y < mitadFilas) {
+        return Zonas::BOSQUE;
+    }
+    else if (playerPos.x >= mitadColumnas && playerPos.y >= mitadFilas) {
+        return Zonas::CUEVA_CELESTE;
+    }
+    else {
+        return Zonas::LIGA_POKENTI;
+    }
+}
