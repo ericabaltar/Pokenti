@@ -19,6 +19,39 @@ enum class GameScene
     GAMEOVER
 };
 
+void gotoxy(int x, int y)
+{
+    COORD coord;
+    coord.X = x;
+    coord.Y = y;
+    SetConsoleCursorPosition(GetStdHandle(STD_OUTPUT_HANDLE), coord);
+}
+
+void DrawStaticInterface()
+{
+    system("cls");
+    
+    gotoxy(0, 0);
+    std::cout << "Pokemons capturados: [N]   Pokeballs: [N]";
+    gotoxy(0, 1);
+    std::cout << "[Nombre Ciudad]";
+    gotoxy(0, 23); 
+    std::cout << "[Nombre de enemigo] [Nivel de salud]";
+    gotoxy(0, 24);
+    std::cout << "ATACAR   CAPTURAR   HUIR";
+}
+
+void UpdateGameStats(const Ash& ash)
+{
+    // Update the stats at the top
+    gotoxy(0, 0); // Position to update Pokemons count
+    std::cout <<" Pokemons capturados: "<< ash.Pokimon; 
+    
+
+    gotoxy(40, 0);
+    std::cout <<"Pokeballs: " << ash.PokeBall;
+}
+
 void ShowMainMenu(GameScene& currentScene) {
     int selectedOption = 0;
     bool selectionMade = false;
@@ -94,6 +127,8 @@ int main() {
 
     bool bosqueBloqueado = true;
     bool cuevaBloqueado = true;
+
+    DrawStaticInterface();
     
     while (!gameIsOver) {
 
@@ -159,6 +194,10 @@ int main() {
             break;
         case GameScene::GAMEPLAY:
         {
+            std::cout << std::endl;
+            std::cout << std::endl;
+            std::cout << std::endl;
+            std::cout << std::endl;
             ash.MoveAsh(mapa.limiteMov_X, mapa.limiteMov_Y, mapa, pokemons, ash, settings);
             mapa.casillas[ash.prevPos.y][ash.prevPos.x] = static_cast<Casilla>(Casilla::VACIO);
             mapa.casillas[ash.pos.y][ash.pos.x] = static_cast<Casilla>(ash.AshLook);
@@ -183,13 +222,9 @@ int main() {
 
             //mapa.PintarTodo();
             mapa.PintarVista(ash.pos);
+            UpdateGameStats(ash);
 
-            std::cout << std::endl << std::endl;
-            std::cout << ash.pos.x << " " << ash.pos.y;
-            std::cout << std::endl;
-            std::cout << "Current Pokimons: " << ash.Pokimon;
-            std::cout << "Current Pokimons: " << ash.PokeBall;
-            std::cout << std::endl;
+
             Sleep(1000 / MAX_NUM_FPS);
             system("cls");
         }
