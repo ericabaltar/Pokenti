@@ -3,6 +3,7 @@
 #include <fstream>
 
 struct Settings {
+//private:
     int FILAS;
     int COLUMNAS;
     int FIRST_AREA_POKE;
@@ -19,6 +20,11 @@ struct Settings {
 
 class FileReader {
 public:
+
     static bool ReadSettings(const std::string& filename, Settings& settings);
+
+private:
+
     static void ComprobarFichero();
+
 };

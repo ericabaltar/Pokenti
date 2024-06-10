@@ -1,9 +1,10 @@
 #include "Ash.h"
-#include "mapa.h"
+#include "Mapa.h"
 #include "Pokeball.h"
 #include "Pokemons.h"
 #include "FileReader.h"
 #include <conio.h>
+
 
 const int MAX_NUM_FPS = 15;
 
@@ -160,18 +161,18 @@ int main() {
             mapa.casillas[ash.pos.y][ash.pos.x] = ash.AshLook;
 
             pokemons.GestionarPokemons(mapa, settings);
-            pokeball.GestionarPokeBalls(mapa);
-            pokeball.VerificarPokeball(ash.pos.x, ash.pos.y, mapa, ash.pos, ash);
+            pokeball.GestionarPokeBalls(mapa, settings);
+            pokeball.VerificarPokeball(ash.pos.x, ash.pos.y, mapa, ash.pos, ash, settings);
             pokemons.GestionarMewtwo(ash.pos.x, ash.pos.y, mapa, settings);
             //desbloqueo zona 2
-            if (ash.Pokimon >= mapa.FIRST_AREA_MIN_POKE && bosqueBloqueado)
+            if (ash.Pokimon >= settings.FIRST_AREA_MIN_POKE && bosqueBloqueado)
             {
                 mapa.UnlockBosque();
                 bosqueBloqueado = false;
             }
 
             //desbloqueo zona 3
-            if (ash.Pokimon >= mapa.SECOND_AREA_MIN_POKE && cuevaBloqueado)
+            if (ash.Pokimon >= settings.SECOND_AREA_MIN_POKE && cuevaBloqueado)
             {
                 mapa.UnlockCueva();
                 bosqueBloqueado = false;

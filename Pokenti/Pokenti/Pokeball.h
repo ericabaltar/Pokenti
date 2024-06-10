@@ -1,13 +1,26 @@
 #pragma once
-#include "mapa.h"
+#include "Mapa.h"
 #include "Ash.h"
+#include "FileReader.h"
 
-class Ash;
-class Mapa;
+struct Ash;
+struct Mapa;
 
 class PokeBall {
 public:
-    PokeBall(); // Constructor
-     void GestionarPokeBalls(Mapa& mapa);
-     bool VerificarPokeball(int jugadorX, int jugadorY, Mapa& mapa, Position ashPos, Ash& ash);
+
+    PokeBall();
+
+     void GestionarPokeBalls(Mapa& mapa, Settings& settings);
+     bool VerificarPokeball(int jugadorX, int jugadorY, Mapa& mapa, Position ashPos, Ash& ash, Settings& settings);
+
+private:
+
+    int PokeBallsPresentesZona1;
+    int PokeBallsPresentesZona2;
+    int nuevaPokeBallX;
+    int nuevaPokeBallY;
+
+    //Hay que arreglar la cogida de la PokeBall
+
 };

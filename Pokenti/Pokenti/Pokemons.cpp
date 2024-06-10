@@ -1,56 +1,50 @@
 #include "Pokemons.h"
-#include <cstdlib>
-#include <chrono>
-#include <thread>
 
-void Pokemons::GestionarPokemons(Mapa& mapa, Settings& settings) {
-    // Contar la cantidad de pokémons presentes en la zona 1 del mapa
+void Pokemons::GestionarPokemons(Mapa& mapa, Settings& settings) 
+{
     int pokemonsPresentesZona1 = 0;
-    for (int i = 0; i < mapa.FILAS / 2; ++i) {
-        for (int j = 0; j < mapa.COLUMNAS / 2; ++j) {
+    for (int i = 0; i < settings.FILAS / 2; ++i) {
+        for (int j = 0; j < settings.COLUMNAS / 2; ++j) {
             if (mapa.casillas[i][j] == mapa.POKEMON) {
                 pokemonsPresentesZona1++;
             }
         }
     }
 
-    // Si hay menos de 6 pokémons en la zona 1, generar y colocar uno nuevo
-    if (pokemonsPresentesZona1 < mapa.FIRST_AREA_POKE) {
+    if (pokemonsPresentesZona1 < settings.FIRST_AREA_POKE) {
         int nuevoPokemonX, nuevoPokemonY;
         do {
-            nuevoPokemonX = rand() % (mapa.COLUMNAS / 2 - 1) + 1;
-            nuevoPokemonY = rand() % (mapa.FILAS / 2 - 1) + 1;
+            nuevoPokemonX = rand() % (settings.COLUMNAS / 2 - 1) + 1;
+            nuevoPokemonY = rand() % (settings.FILAS / 2 - 1) + 1;
         } while (mapa.casillas[nuevoPokemonY][nuevoPokemonX] != mapa.VACIO);
 
-        mapa.casillas[nuevoPokemonY][nuevoPokemonX] = mapa.POKEMON; // Colocar el nuevo Pokémon
+        mapa.casillas[nuevoPokemonY][nuevoPokemonX] = mapa.POKEMON;
     }
 
-    // Contar la cantidad de pokémons presentes en la zona 2 del mapa
     int pokemonsPresentesZona2 = 0;
-    for (int i = 0; i < mapa.FILAS / 2; ++i) {
-        for (int j = mapa.COLUMNAS / 2; j < mapa.COLUMNAS; ++j) {
+    for (int i = 0; i < settings.FILAS / 2; ++i) {
+        for (int j = settings.COLUMNAS / 2; j < settings.COLUMNAS; ++j) {
             if (mapa.casillas[i][j] == mapa.POKEMON) {
                 pokemonsPresentesZona2++;
             }
         }
     }
 
-    // Si hay menos de 18 pokémons en la zona 2, generar y colocar uno nuevo
-    if (pokemonsPresentesZona2 < mapa.SECOND_AREA_POKE) {
+    if (pokemonsPresentesZona2 < settings.SECOND_AREA_POKE) {
         int nuevoPokemonX, nuevoPokemonY;
         do {
-            nuevoPokemonX = rand() % (mapa.COLUMNAS / 2 - 1) + mapa.COLUMNAS / 2 - 1;
-            nuevoPokemonY = rand() % (mapa.FILAS / 2 - 1) + 1;
+            nuevoPokemonX = rand() % (settings.COLUMNAS / 2 - 1) + settings.COLUMNAS / 2 - 1;
+            nuevoPokemonY = rand() % (settings.FILAS / 2 - 1) + 1;
         } while (mapa.casillas[nuevoPokemonY][nuevoPokemonX] != mapa.VACIO);
 
-        mapa.casillas[nuevoPokemonY][nuevoPokemonX] = mapa.POKEMON; // Colocar el nuevo Pokémon
+        mapa.casillas[nuevoPokemonY][nuevoPokemonX] = mapa.POKEMON;
     }
 
-    // Mover Pokémons según el tiempo establecido
     MoverPokemons(mapa, settings);
 }
 
-void Pokemons::MoverPokemons(Mapa& mapa, const Settings& settings) {
+void Pokemons::MoverPokemons(Mapa& mapa, const Settings& settings) 
+{
     auto now = std::chrono::system_clock::now();
     std::chrono::duration<double> elapsed_seconds = now - lastMoveTime;
 
@@ -59,46 +53,54 @@ void Pokemons::MoverPokemons(Mapa& mapa, const Settings& settings) {
     int waitTime = rand() % (maxTime - minTime + 1) + minTime;
 
     if (elapsed_seconds.count() >= waitTime) {
-        for (int i = 0; i < mapa.FILAS; ++i) {
-            for (int j = 0; j < mapa.COLUMNAS; ++j) {
+        for (int i = 0; i < settings.FILAS; ++i) {
+            for (int j = 0; j < settings.COLUMNAS; ++j) {
                 if (mapa.casillas[i][j] == mapa.POKEMON) {
                     int direction = rand() % 8;
                     int newX = j, newY = i;
 
                     switch (direction) {
-                    case 0: // Arriba
+                    case 0:
                         newY -= 1;
                         break;
-                    case 1: // Abajo
+                    case 1:
                         newY += 1;
                         break;
-                    case 2: // Izquierda
+                    case 2:
                         newX -= 1;
                         break;
-                    case 3: // Derecha
+                    case 3:
                         newX += 1;
                         break;
-                    case 4: // Arriba-Izquierda
+                    case 4:
                         newX -= 1;
                         newY -= 1;
                         break;
-                    case 5: // Arriba-Derecha
+                    case 5:
                         newX += 1;
                         newY -= 1;
                         break;
-                    case 6: // Abajo-Izquierda
+                    case 6:
                         newX -= 1;
                         newY += 1;
                         break;
-                    case 7: // Abajo-Derecha
+                    case 7: 
                         newX += 1;
                         newY += 1;
                         break;
                     }
 
-                    if (newX >= 0 && newX < mapa.COLUMNAS && newY >= 0 && newY < mapa.FILAS && mapa.casillas[newY][newX] == mapa.VACIO) {
-                        mapa.casillas[newY][newX] = mapa.POKEMON;
-                        mapa.casillas[i][j] = mapa.VACIO;
+                    if (i < settings.FILAS / 2 && j < settings.COLUMNAS / 2) {
+                        if (newX >= 0 && newX < settings.COLUMNAS / 2 && newY >= 0 && newY < settings.FILAS / 2 && mapa.casillas[newY][newX] == mapa.VACIO) {
+                            mapa.casillas[newY][newX] = mapa.POKEMON;
+                            mapa.casillas[i][j] = mapa.VACIO;
+                        }
+                    }else if (i < settings.FILAS / 2 && j >= settings.COLUMNAS / 2) {
+
+                        if (newX >= settings.COLUMNAS / 2 && newX < settings.COLUMNAS && newY >= 0 && newY < settings.FILAS / 2 && mapa.casillas[newY][newX] == mapa.VACIO) {
+                            mapa.casillas[newY][newX] = mapa.POKEMON;
+                            mapa.casillas[i][j] = mapa.VACIO;
+                        }
                     }
                 }
             }
@@ -107,34 +109,29 @@ void Pokemons::MoverPokemons(Mapa& mapa, const Settings& settings) {
     }
 }
 
-// Los métodos restantes se mantienen sin cambios
-
-bool Pokemons::GestionarMewtwo(int jugadorX, int jugadorY, const Mapa& mapa, Settings& settings) {
-    static bool mewtwoAparecido = false; // Variable estática para controlar si Mewtwo ya apareció
+bool Pokemons::GestionarMewtwo(int jugadorX, int jugadorY, const Mapa& mapa, Settings& settings) 
+{
+    static bool mewtwoAparecido = false;
     int mewtwoX = 52;
     int mewtwoY = 37;
-    if (!mewtwoAparecido) { // Verificar si Mewtwo no ha aparecido todavía
+    if (!mewtwoAparecido) {
 
 
         mapa.casillas[mewtwoY][mewtwoX] = mapa.MEWTWO;
         settings.MEWTWO_LIFE = settings.MEWTWO_LIFE;
-        mewtwoAparecido = true; // Marcar que Mewtwo ha aparecido
-        return true; // Mewtwo apareció
+        mewtwoAparecido = true;
+        return true;
     }
     if (GetAsyncKeyState(VK_SPACE)&&((jugadorX == mewtwoX && (jugadorY == mewtwoY - 1 || jugadorY == mewtwoY + 1)) ||
         (jugadorY == mewtwoY && (jugadorX == mewtwoX - 1 || jugadorX == mewtwoX + 1))))
     {
-
         mapa.casillas[mewtwoY][mewtwoX] = mapa.VACIO;
-
-
-        
-
         return true;
     }
     return false;
 }
-bool Pokemons::CazarPokemon(int jugadorX, int jugadorY, Position playerPos, const Mapa& mapa, Pokemons& pokemons, Ash& ash, Settings& settings) {
+bool Pokemons::CazarPokemon(int jugadorX, int jugadorY, Position playerPos, const Mapa& mapa, Pokemons& pokemons, Ash& ash, Settings& settings) 
+{
     if (GetAsyncKeyState(VK_SPACE) && (mapa.casillas[jugadorY - 1][jugadorX] == mapa.POKEMON || mapa.casillas[jugadorY + 1][jugadorX] == mapa.POKEMON
         || mapa.casillas[jugadorY][jugadorX + 1] == mapa.POKEMON || mapa.casillas[jugadorY][jugadorX - 1] == mapa.POKEMON)) {
 
@@ -149,26 +146,19 @@ bool Pokemons::CazarPokemon(int jugadorX, int jugadorY, Position playerPos, cons
 
         ash.Pokimon +=1;
 
-        if (GestionarMewtwo(jugadorX, jugadorY, mapa, settings)) {
-            return true; // Se interactuó con Mewtwo
+        if (GestionarMewtwo(jugadorX, jugadorY, mapa, settings)){
+            return true;
         }
 
 
-        //Erica la parte del combate si la puedes hacer aqui mejor sino cambia esta funcion a tu gusto
 
-
-
-
-
-
-        // Generar una nueva posición aleatoria para un Pokémon
         int nuevoPokemonX, nuevoPokemonY;
         do {
-            nuevoPokemonX = rand() % (mapa.limiteMapa_x - 1) + 1;
-            nuevoPokemonY = rand() % (mapa.FILAS / 2 - 1) + 1;
+            nuevoPokemonX = rand() % (settings.COLUMNAS - 1) + 1;
+            nuevoPokemonY = rand() % (settings.FILAS / 2 - 1) + 1;
         } while (mapa.casillas[nuevoPokemonY][nuevoPokemonX] != mapa.VACIO);
 
-        mapa.casillas[nuevoPokemonY][nuevoPokemonX] = mapa.POKEMON; // Colocar el nuevo Pokémon
+        mapa.casillas[nuevoPokemonY][nuevoPokemonX] = mapa.POKEMON;
 
         return true;
     }

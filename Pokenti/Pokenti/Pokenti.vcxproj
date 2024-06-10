@@ -137,7 +137,7 @@
   <ItemGroup>
     <ClInclude Include="Ash.h" />
     <ClInclude Include="FileReader.h" />
-    <ClInclude Include="mapa.h" />
+    <ClInclude Include="Mapa.h" />
     <ClInclude Include="Pokeball.h" />
     <ClInclude Include="Pokemons.h" />
     <ClInclude Include="Types.h" />

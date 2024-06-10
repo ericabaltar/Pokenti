@@ -1,9 +1,10 @@
-#include "mapa.h"
+#include "Mapa.h"
 
 
 Mapa :: Mapa(const Settings& settings) {
-    // Inicializar la semilla de números aleatorios
+
     srand(time(0));
+
     FILAS = settings.FILAS;
     COLUMNAS = settings.COLUMNAS;
     FIRST_AREA_POKE = settings.FIRST_AREA_POKE;
@@ -41,42 +42,37 @@ Mapa :: Mapa(const Settings& settings) {
         }
     }
 
-    // Cuadrante 1: Pueblo Paleta
     for (int i = 1; i < mitadFilas - 1; ++i) {
         for (int j = 1; j < mitadColumnas - 1; ++j) {
             casillas[i][j] = VACIO;
         }
     }
-    // Cuadrante 2: Bosque
     for (int i = 1; i < mitadFilas - 1; ++i) {
         for (int j = mitadColumnas + 1; j < COLUMNAS - 1; ++j) {
             casillas[i][j] = VACIO;
         }
     }
 
-    // Cuadrante 3: Cueva Celeste
     for (int i = mitadFilas + 1; i < FILAS - 1; ++i) {
         for (int j = 1; j < mitadColumnas - 1; ++j) {
             casillas[i][j] = VACIO;
         }
     }
-    // Cuadrante 4: Liga PokENTI
+
     for (int i = mitadFilas + 1; i < FILAS - 1; ++i) {
         for (int j = mitadColumnas + 1; j < COLUMNAS - 1; ++j) {
             casillas[i][j] = VACIO;
         }
     }
 
-    // Agregar los seis pokémons aleatoriamente en el Pueblo Paleta
     for (int i = 0; i < FIRST_AREA_POKE; i++) {
-        // Verificar si la casilla está vacía antes de colocar el pokémon
         int nuevoPokemonX, nuevoPokemonY;
         do {
             nuevoPokemonX = rand() % (mitadColumnas / 2 - 1) + 1;
             nuevoPokemonY = rand() % (mitadFilas / 2 - 1) + 1;
         } while (casillas[nuevoPokemonY][nuevoPokemonX] != VACIO);
 
-        casillas[nuevoPokemonY][nuevoPokemonX] = POKEMON; // Colocar el nuevo Pokémon
+        casillas[nuevoPokemonY][nuevoPokemonX] = POKEMON;
     }
 
     for (int i = 0; i < SECOND_AREA_POKE-3; i++) {
@@ -86,7 +82,7 @@ Mapa :: Mapa(const Settings& settings) {
             nuevoPokemonY = rand() % (FILAS / 2 - 1) + 1;
         } while (casillas[nuevoPokemonY][nuevoPokemonX] != VACIO);
 
-        casillas[nuevoPokemonY][nuevoPokemonX] = POKEMON; // Colocar el nuevo Pokémon
+        casillas[nuevoPokemonY][nuevoPokemonX] = POKEMON;
     }
 }
 
@@ -120,29 +116,29 @@ void Mapa::PintarVista(Position playerPos)
             case '>':
             case 'v':
             case '^':
-                SetConsoleTextAttribute(hConsole, 12); // Rojo
+                SetConsoleTextAttribute(hConsole, 12);
                 break;
             case 'X':
-                SetConsoleTextAttribute(hConsole, 8); // Gris          
+                SetConsoleTextAttribute(hConsole, 8);         
                 break;
             case 'x':
-                SetConsoleTextAttribute(hConsole, 9); // Azul
+                SetConsoleTextAttribute(hConsole, 9);
                 break;
             case 'P':
-                SetConsoleTextAttribute(hConsole, 10); // Verde
+                SetConsoleTextAttribute(hConsole, 10);
                 break;
             case 'O':
-                SetConsoleTextAttribute(hConsole, 14); // Amarillo
+                SetConsoleTextAttribute(hConsole, 14);
                 break;
             case 'M':
-                SetConsoleTextAttribute(hConsole, 13); // Rosa
+                SetConsoleTextAttribute(hConsole, 13);
                 break;
             default:
-                SetConsoleTextAttribute(hConsole, 15); // Blanco
+                SetConsoleTextAttribute(hConsole, 15);
                 break;
             }
            std:: cout << casillas[i][j];
-            SetConsoleTextAttribute(hConsole, 15); // Blanco
+            SetConsoleTextAttribute(hConsole, 15);
         }
         std::cout << std::endl;
     }
@@ -160,33 +156,31 @@ void Mapa::PintarTodo()
     {
         for (int j = 0; j < COLUMNAS; j++)
         {
-            //CazarPokemon(i, jugadorY, j, jugadorX);
-
             switch (casillas[i][j]) {
             case '<':
             case '>':
             case 'v':
             case '^':
-                SetConsoleTextAttribute(hConsole, 12); // Rojo
+                SetConsoleTextAttribute(hConsole, 12);
                 break;
             case 'X':
-                SetConsoleTextAttribute(hConsole, 8); // Gris          
+                SetConsoleTextAttribute(hConsole, 8);         
                 break;
             case 'x':
-                SetConsoleTextAttribute(hConsole, 9); // Azul
+                SetConsoleTextAttribute(hConsole, 9);
                 break;
             case 'P':
-                SetConsoleTextAttribute(hConsole, 13); // Rosa
+                SetConsoleTextAttribute(hConsole, 13);
                 break;
             case 'O':
-                SetConsoleTextAttribute(hConsole, 14); // Amarillo
+                SetConsoleTextAttribute(hConsole, 14);
                 break;
             default:
-                SetConsoleTextAttribute(hConsole, 15); // Blanco
+                SetConsoleTextAttribute(hConsole, 15);
                 break;
             }
             std::cout << casillas[i][j];
-            SetConsoleTextAttribute(hConsole, 15); // Blanco
+            SetConsoleTextAttribute(hConsole, 15);
         }
         std::cout << std::endl;
     }
@@ -194,23 +188,22 @@ void Mapa::PintarTodo()
 
 void Mapa::UnlockBosque()
 {
-    //aumentar limites de la camara (y el player)
     limiteMapa_x = COLUMNAS - 1;
     limiteMov_X = COLUMNAS - 1;
     limiteMapa_y = FILAS - 1;
-    //borrar la barrera
+
     for (int i = 1; i < FILAS / 2; ++i) {
         casillas[i][COLUMNAS / 2] = VACIO;
     }
 }
 void Mapa::UnlockCueva()
 {
-    //aumentar limites de la camara (y el player)
+
     limiteMapa_x = COLUMNAS - 1;
     limiteMov_X = COLUMNAS - 1;
     limiteMov_Y = FILAS - 1;
     limiteMapa_y = FILAS - 1;
-    // Borrar barreras
+
     for (int i = COLUMNAS / 2; i < COLUMNAS - 1; ++i) {
         casillas[FILAS / 2][i] = VACIO;
     }

@@ -2,7 +2,7 @@
 #include <iostream>
 #include <Windows.h>
 #include "Types.h"
-#include "mapa.h"
+#include "Mapa.h"
 #include "Pokemons.h"
 #include "FileReader.h"
 
@@ -12,9 +12,13 @@ class Pokemons;
 enum class AshMovement
 {
     UP,
+
     DOWN,
+
     LEFT,
+
     RIGHT,
+
     NONE
 };
 

@@ -2,52 +2,53 @@
 
 
 PokeBall::PokeBall() {
-    // Inicializar la semilla de números aleatorios
+
     srand(time(0));
 }
-void PokeBall::GestionarPokeBalls(Mapa& mapa)
+
+void PokeBall::GestionarPokeBalls(Mapa& mapa, Settings& settings)
 {
-    // Contar la cantidad de pokémons presentes en el mapa
     int PokeBallsPresentesZona1 = 0;
-    for (int i = 0; i < mapa.FILAS / 2; ++i) {
-        for (int j = 0; j < mapa.COLUMNAS / 2; ++j) {
+    for (int i = 0; i < settings.FILAS / 2; ++i) {
+        for (int j = 0; j < settings.COLUMNAS / 2; ++j) {
             if (mapa.casillas[i][j] == mapa.POKEBALL) {
                 PokeBallsPresentesZona1++;
             }
         }
     }
-    // Si hay menos de 1 PokeBall, generar y colocar una nueva
+
     if (PokeBallsPresentesZona1 < 1) {
         int nuevaPokeBallX, nuevaPokeBallY;
         do {
-            nuevaPokeBallX = rand() % (mapa.COLUMNAS / 2 - 1) + 1;
-            nuevaPokeBallY = rand() % (mapa.FILAS / 2 - 1) + 1;
+            nuevaPokeBallX = rand() % (settings.COLUMNAS / 2 - 1) + 1;
+            nuevaPokeBallY = rand() % (settings.FILAS / 2 - 1) + 1;
         } while (mapa.casillas[nuevaPokeBallY][nuevaPokeBallX] != mapa.VACIO);
 
-        mapa.casillas[nuevaPokeBallY][nuevaPokeBallX] = mapa.POKEBALL; // Colocar la nueva PokeBall
+        mapa.casillas[nuevaPokeBallY][nuevaPokeBallX] = mapa.POKEBALL;
     }
 
     int PokeBallsPresentesZona2 = 0;
-    for (int i = 0; i < mapa.FILAS / 2; ++i) {
-        for (int j = mapa.COLUMNAS / 2; j < mapa.COLUMNAS; ++j) {
+    for (int i = 0; i < settings.FILAS / 2; ++i) {
+        for (int j = settings.COLUMNAS / 2; j < settings.COLUMNAS; ++j) {
             if (mapa.casillas[i][j] == mapa.POKEBALL) {
                 PokeBallsPresentesZona2++;
             }
         }
     }
-    // Si hay menos de 18 pokémons, generar y colocar uno nuevo
+
     if (PokeBallsPresentesZona2 < 1) {
         int nuevaPokeBallX, nuevaPokeBallY;
         do {
-            nuevaPokeBallX = rand() % (mapa.COLUMNAS / 2 - 1) + mapa.COLUMNAS / 2 - 1;
-            nuevaPokeBallY = rand() % (mapa.FILAS / 2 - 1) + 1;
+            nuevaPokeBallX = rand() % (settings.COLUMNAS / 2 - 1) + settings.COLUMNAS / 2 - 1;
+            nuevaPokeBallY = rand() % (settings.FILAS / 2 - 1) + 1;
         } while (mapa.casillas[nuevaPokeBallY][nuevaPokeBallX] != mapa.VACIO);
 
-        mapa.casillas[nuevaPokeBallY][nuevaPokeBallX] = mapa.POKEBALL; // Colocar el nuevo Pokémon
+        mapa.casillas[nuevaPokeBallY][nuevaPokeBallX] = mapa.POKEBALL;
     }
 
 }
-bool PokeBall::VerificarPokeball(int jugadorX, int jugadorY, Mapa& mapa, Position ashPos, Ash& ash) {
+
+bool PokeBall::VerificarPokeball(int jugadorX, int jugadorY, Mapa& mapa, Position ashPos, Ash& ash, Settings& settings) {
     // Coordenadas adyacentes a la posición de Ash
     int adyacentes[4][2] = {
         {jugadorX, jugadorY - 1}, // Arriba
@@ -66,7 +67,7 @@ bool PokeBall::VerificarPokeball(int jugadorX, int jugadorY, Mapa& mapa, Positio
         int y = adyacentes[i][1];
 
         // Asegurarse de que la coordenada está dentro de los límites del mapa
-        if (x >= 0 && x < mapa.COLUMNAS && y >= 0 && y < mapa.FILAS) {
+        if (x >= 0 && x < settings.COLUMNAS && y >= 0 && y < settings.FILAS) {
             if (mapa.casillas[y][x] == mapa.POKEBALL) {
                 pokeballX = x;
                 pokeballY = y;

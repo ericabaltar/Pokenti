@@ -8,17 +8,33 @@
 #include "FileReader.h"
 #include "Pokeball.h"
 
+//Cierta parte del codigo del constructor tiene que irse para Pokemons.cpp y .h
 
-enum class Direction
-{
-    UP,
-    DOWN, 
-    LEFT, 
-    RIGHT 
-};
+struct Mapa{
+public:
 
-struct Mapa
-{
+    Mapa(const Settings& settings);
+
+    ~Mapa();
+
+    void PintarVista(Position playerPos);
+    void PintarTodo();
+    void UnlockBosque();
+    void UnlockCueva();
+
+    int limiteMov_X;
+    int limiteMov_Y;
+    const char VACIO = ' ';
+    const char PARED = 'X';
+    const char SEPARADOR = 'x';
+    const char POKEMON = 'P';
+    const char POKEBALL = 'O';
+    const char MEWTWO = 'M';
+
+    char** casillas;
+
+private:
+
     int FILAS;
     int COLUMNAS;
     int FIRST_AREA_POKE;
@@ -33,23 +49,8 @@ struct Mapa
 
     int limiteMapa_x;
     int limiteMapa_y;
-    int limiteMov_X;
-    int limiteMov_Y;
-    const char VACIO = ' ';
-    const char PARED = 'X';
-    const char SEPARADOR = 'x';
-    const char POKEMON = 'P';
-    const char POKEBALL = 'O';
-    const char MEWTWO = 'M';
-    int contadorPokeballs = 0;
+
     const int RANGO_VISTA_JUGADOR_X = 22;
     const int RANGO_VISTA_JUGADOR_Y = 12;
-    char** casillas;
 
-    Mapa( const Settings& settings);
-    ~Mapa();
-    void PintarVista(Position playerPos);
-    void PintarTodo();
-    void UnlockBosque();
-    void UnlockCueva();
 };
