@@ -143,6 +143,7 @@ bool Pokemons::CapturarPokemon(int jugadorX, int jugadorY, const Mapa& mapa, Pok
         const int probabilidadLegendaria = 100 - settings.MEWTWO_LIFE;
         const int randNum = rand() % 100;
         if (randNum < probabilidad) {
+            std::cout << std::endl;
             std::cout << "Has capturado el Pokémon!\n";
             if (mapa.casillas[jugadorY - 1][jugadorX] == Casilla::POKEMON)
                 mapa.casillas[jugadorY - 1][jugadorX] = Casilla::VACIO;
@@ -167,7 +168,7 @@ bool Pokemons::CapturarPokemon(int jugadorX, int jugadorY, const Mapa& mapa, Pok
         }
         else if(randNum < probabilidadLegendaria && ((jugadorX == mewtwoX && (jugadorY == mewtwoY - 1 || jugadorY == mewtwoY + 1)) ||
                (jugadorY == mewtwoY && (jugadorX == mewtwoX - 1 || jugadorX == mewtwoX + 1)))) {
-
+                std::cout << std::endl;
                 std::cout << "Has capturado a Mewtwo!!!\n";
 
                 mapa.casillas[mewtwoY][mewtwoX] = Casilla::VACIO;
@@ -175,6 +176,7 @@ bool Pokemons::CapturarPokemon(int jugadorX, int jugadorY, const Mapa& mapa, Pok
             return true;
         }
              else {
+            std::cout << std::endl;
             std::cout << "El Pokémon no fue capturado!\n";
             if (((jugadorX == mewtwoX && (jugadorY == mewtwoY - 1 || jugadorY == mewtwoY + 1)) ||
                 (jugadorY == mewtwoY && (jugadorX == mewtwoX - 1 || jugadorX == mewtwoX + 1)))) {
@@ -184,7 +186,8 @@ bool Pokemons::CapturarPokemon(int jugadorX, int jugadorY, const Mapa& mapa, Pok
         }
     }
     else {
-        std::cout << "No tienes Pokeballs!\n";
+        std::cout << std::endl;
+        std::cout << "No tienes Pokeballs!" << std::endl;
         if (((jugadorX == mewtwoX && (jugadorY == mewtwoY - 1 || jugadorY == mewtwoY + 1)) ||
             (jugadorY == mewtwoY && (jugadorX == mewtwoX - 1 || jugadorX == mewtwoX + 1)))) {
             mapa.casillas[mewtwoY][mewtwoX] = Casilla::VACIO;
@@ -203,8 +206,9 @@ bool Pokemons::AtacarPokemon(int jugadorX, int jugadorY, const Mapa& mapa, Pokem
         || mapa.casillas[jugadorY][jugadorX + 1] == Casilla::POKEMON || mapa.casillas[jugadorY][jugadorX - 1] == Casilla::POKEMON)) {
 
         settings.POKEMON_LIFE -= settings.PICACHU_DAMAGE;
-
+        std::cout << std::endl;
         std::cout << "Vida restante del Pokémon: " << settings.MEWTWO_LIFE << "\n";
+        std::cout << std::endl;
         std::cout << "Daño de Pikachu: " << settings.PICACHU_DAMAGE << "\n";
 
         if (settings.POKEMON_LIFE <= 0) {

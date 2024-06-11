@@ -29,18 +29,6 @@ void gotoxy(int x, int y)
     SetConsoleCursorPosition(GetStdHandle(STD_OUTPUT_HANDLE), coord);
 }
 
-void DrawStaticInterface()
-{
-    system("cls");
-   
-    gotoxy(0, 1);
-    std::cout << "[Nombre Ciudad]";
-    gotoxy(0, 23); 
-    std::cout << "[Nombre de enemigo] [Nivel de salud]";
-    gotoxy(0, 24);
-    std::cout << "ATACAR   CAPTURAR   HUIR";
-}
-
 void UpdateGameStats(const Ash& ash, const Zonas& zona)
 {
     // Update the stats at the top
@@ -208,7 +196,6 @@ int main() {
     bool bosqueBloqueado = true;
     bool cuevaBloqueado = true;
 
-    DrawStaticInterface();
     
     while (!gameIsOver) {
 
