@@ -11,11 +11,14 @@ public:
 
     PokeBall();
 
-     void GestionarPokeBalls(Mapa& mapa, Settings& settings);
+
+     void GestionarPokeBalls(int jugadorX, int jugadorY, Mapa& mapa, Ash& ash, Settings& settings);
      bool VerificarPokeball(int jugadorX, int jugadorY, Mapa& mapa, Position ashPos, Ash& ash, Settings& settings);
 
 private:
 
+    int iteracion;
+    int iteracionZona2;
     int PokeBallsPresentesZona1;
     int PokeBallsPresentesZona2;
     int nuevaPokeBallX;

@@ -42,5 +42,9 @@ private:
     int mewtwoX = 52;
     int mewtwoY = 37;
 
+    int probabilidad;
+    int probabilidadLegendario;
+    int randNum;
+
 };
 

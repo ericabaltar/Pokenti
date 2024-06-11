@@ -141,9 +141,9 @@ bool Pokemons::CapturarPokemon(int jugadorX, int jugadorY, const Mapa& mapa, Pok
 {
     if (ash.PokeBall > 0) {
         ash.PokeBall--;
-        int probabilidad = 100 - settings.POKEMON_LIFE;
-        int probabilidadLegendaria = 100 - settings.MEWTWO_LIFE;
-        int randNum = rand() % 100;
+        const int probabilidad = 100 - settings.POKEMON_LIFE;
+        const int probabilidadLegendaria = 100 - settings.MEWTWO_LIFE;
+        const int randNum = rand() % 100;
         if (randNum < probabilidad) {
             std::cout << "Has capturado el Pokémon!\n";
             if (mapa.casillas[jugadorY - 1][jugadorX] == Casilla::POKEMON)

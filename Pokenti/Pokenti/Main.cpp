@@ -219,8 +219,7 @@ int main() {
             mapa.casillas[ash.pos.y][ash.pos.x] = static_cast<Casilla>(ash.AshLook);
 
             pokemons.GestionarPokemons(mapa, settings);
-            pokeball.GestionarPokeBalls(mapa, settings);
-            pokeball.VerificarPokeball(ash.pos.x, ash.pos.y, mapa, ash.pos, ash, settings);
+            pokeball.GestionarPokeBalls(ash.pos.x, ash.pos.y, mapa, ash, settings);
             pokemons.GestionarMewtwo(ash.pos.x, ash.pos.y, mapa, settings);
 
             if (ash.Pokimon >= settings.FIRST_AREA_MIN_POKE && bosqueBloqueado)
