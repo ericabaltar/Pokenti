@@ -205,7 +205,7 @@ bool Pokemons::AtacarPokemon(int jugadorX, int jugadorY, const Mapa& mapa, Pokem
         settings.POKEMON_LIFE -= settings.PICACHU_DAMAGE;
 
         std::cout << "Vida restante del Pokémon: " << settings.MEWTWO_LIFE << "\n";
-        std::cout << "Daño de Ericachu: " << settings.PICACHU_DAMAGE << "\n";
+        std::cout << "Daño de Pikachu: " << settings.PICACHU_DAMAGE << "\n";
 
         if (settings.POKEMON_LIFE <= 0) {
             if (mapa.casillas[jugadorY - 1][jugadorX] == Casilla::POKEMON)
@@ -253,4 +253,23 @@ bool Pokemons::Huir(int jugadorX, int jugadorY, const Mapa& mapa)
     return true;
 }
 
+std::string Pokemons::GetRandomPokemonName() {
+    static bool initialized = false;
+    if (!initialized) {
+        srand(static_cast<unsigned int>(time(nullptr)));
+        initialized = true;
+    }
+
+    std::vector<std::string> pokemonNames = {
+        "Bulbasaur",
+        "Charmander",
+        "Squirtle",
+        "Psyduck",
+        "Jigglypuff",
+        "Eevee"
+    };
+
+    int randomIndex = rand() % pokemonNames.size();
+    return pokemonNames[randomIndex];
+}
 

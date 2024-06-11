@@ -5,9 +5,20 @@
 #include <ctime>
 #include <chrono>
 #include <conio.h>
+#include <vector>
 
 class Ash;
 class Mapa;
+
+enum class PokemonNames
+{
+    BULBASAUR,
+    CHARMANDER,
+    SQUIRTLE,
+    PSYDUCK,
+    JIGGLYPUFF,
+    EEVEE,
+};
 
 class Pokemons {
 public:
@@ -18,7 +29,7 @@ public:
     bool CapturarPokemon(int jugadorX, int jugadorY, const Mapa& mapa, Pokemons& pokemons, Ash& ash, Settings& settings);
     bool AtacarPokemon(int jugadorX, int jugadorY, const Mapa& mapa, Pokemons& pokemons, Ash& ash, Settings& settings);
     bool Huir(int jugadorX, int jugadorY, const Mapa& mapa);
-
+    static std::string GetRandomPokemonName();
 private:
 
     void MoverPokemons(Mapa& mapa, Settings& settings);
@@ -46,6 +57,16 @@ private:
     int probabilidad;
     int probabilidadLegendario;
     int randNum;
+
+    std::vector<PokemonNames> nombresPokemon = {
+        PokemonNames::BULBASAUR,
+        PokemonNames::CHARMANDER,
+        PokemonNames::SQUIRTLE,
+        PokemonNames::PSYDUCK,
+        PokemonNames::JIGGLYPUFF,
+        PokemonNames::EEVEE
+
+    };
 
 };
 

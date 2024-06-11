@@ -70,15 +70,15 @@ void UpdateGameStats(const Ash& ash, const Zonas& zona)
     std::cout << "                      [ " << zonaNombre << " ]";
 }
 
-void MostrarInterfazCombate(int selectedOption)
+void MostrarInterfazCombate(int selectedOption, const std::string& pokemonName, Settings& settings)
 {
-   
+    // Actualiza solo la parte de la interfaz de combate
     gotoxy(0, 23);
-    std::cout << "[Nombre de enemigo] [Nivel de salud]";
+    std::cout << "[" << pokemonName << "] [" << settings.POKEMON_LIFE << "]";
     gotoxy(0, 24);
-    std::cout << (selectedOption == 0 ? "> " : "  ") << "ATACAR   ";
-    std::cout << (selectedOption == 1 ? "> " : "  ") << "CAPTURAR   ";
-    std::cout << (selectedOption == 2 ? "> " : "  ") << "HUIR";
+    std::cout << (selectedOption == 0 ? "> ATACAR   " : "  ATACAR   ");
+    std::cout << (selectedOption == 1 ? "> CAPTURAR   " : "  CAPTURAR   ");
+    std::cout << (selectedOption == 2 ? "> HUIR" : "  HUIR");
 }
 
 void ShowMainMenu(GameScene& currentScene) {
@@ -134,6 +134,7 @@ ___  ___      _        ___  ___
                 exit(0);
             }
             selectionMade = true;
+
             break;
         }
     }
@@ -143,16 +144,17 @@ void CombatMenu(Ash& ash, Pokemons& pokemons, Mapa& mapa, Settings& settings, Ga
 {
     int selectedOption = 0;
     bool inCombat = true;
+    std::string pokemonName = Pokemons::GetRandomPokemonName();
 
     while (inCombat) {
-        // Redibujar el mapa y la interfaz de juego
         system("cls");
+        // Redibujar el mapa y la interfaz de juego
         mapa.PintarVista(ash.pos);
         Zonas currentZone = mapa.GetZona(ash.pos);
         UpdateGameStats(ash, currentZone);
 
         // Mostrar la interfaz de combate
-        MostrarInterfazCombate(selectedOption);
+        MostrarInterfazCombate(selectedOption, pokemonName, settings);
 
         int ch = _getch();
         switch (ch) {
@@ -312,9 +314,11 @@ int main() {
         case GameScene::COMBAT:
         {
             CombatMenu(ash, pokemons, mapa, settings, currentScene);
+            system("cls");
         }
         case GameScene::GAMEOVER:
         {
+            system("cls");
             std::cout << "\033[38;5;153m";
             std::cout << R"(             
                _,........__                                          
