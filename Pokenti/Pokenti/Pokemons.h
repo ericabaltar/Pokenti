@@ -23,6 +23,9 @@ enum class PokemonNames
 class Pokemons {
 public:
 
+    int mewtwoX = 52;
+    int mewtwoY = 37;
+
     void GestionarPokemons(Mapa& mapa, Settings& settings);
     bool CazarPokemon(int jugadorX, int jugadorY, Position playerPos, const Mapa& mapa, Pokemons& pokemons, Ash& ash, Settings& settings);
     bool GestionarMewtwo(int jugadorX, int jugadorY, const Mapa& mapa,Settings& settings);
@@ -53,8 +56,7 @@ private:
     std::chrono::time_point<std::chrono::system_clock> lastMoveTime;
 
     static bool mewtwoAparecido;
-    int mewtwoX = 52;
-    int mewtwoY = 37;
+
 
     int probabilidad;
     int probabilidadLegendario;

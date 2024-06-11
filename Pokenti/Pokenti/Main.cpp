@@ -186,6 +186,13 @@ void CombatMenu(Ash& ash, Pokemons& pokemons, Mapa& mapa, Settings& settings, Ga
     currentScene = GameScene::GAMEPLAY;
 }
 
+void CloseConsole() {
+    HWND hwnd = GetConsoleWindow();
+    if (hwnd != NULL) {
+        PostMessage(hwnd, WM_CLOSE, 0, 0);
+    }
+}
+
 int main() {
 
     srand(time(NULL));
@@ -207,6 +214,11 @@ int main() {
 
     
     while (!gameIsOver) {
+        if (GetAsyncKeyState(VK_ESCAPE)) {
+            gameIsOver = true;
+            CloseConsole();
+            break;
+        }
 
         switch (currentScene)
         {
