@@ -156,21 +156,21 @@ void CombatMenu(Ash& ash, Pokemons& pokemons, Mapa& mapa, Settings& settings, Ga
         // Mostrar la interfaz de combate
         MostrarInterfazCombate(selectedOption, pokemonName, settings);
 
-        int ch = _getch();
-        switch (ch) {
-        case 72: // Flecha arriba
-        case 75: // Flecha izquierda
+    CheckInput:
+        if (GetAsyncKeyState(VK_UP) || GetAsyncKeyState(VK_LEFT)) {
             selectedOption = (selectedOption - 1 + 3) % 3;
-            break;
-        case 80: // Flecha abajo
-        case 77: // Flecha derecha
+            Sleep(500);
+        }
+        else if (GetAsyncKeyState(VK_DOWN) || GetAsyncKeyState(VK_RIGHT)) {
             selectedOption = (selectedOption + 1) % 3;
-            break;
-        case 13: // Enter
+            Sleep(500);
+        }
+        else if (GetAsyncKeyState(VK_SPACE)) {
             if (selectedOption == 0) { // ATACAR
                 if (pokemons.AtacarPokemon(ash.pos.x, ash.pos.y, mapa, pokemons, ash, settings)) {
                     inCombat = false;
                 }
+                Sleep(500);
             }
             else if (selectedOption == 1) { // CAPTURAR
                 if (pokemons.CapturarPokemon(ash.pos.x, ash.pos.y, mapa, pokemons, ash, settings)) {
@@ -181,8 +181,9 @@ void CombatMenu(Ash& ash, Pokemons& pokemons, Mapa& mapa, Settings& settings, Ga
                 pokemons.Huir(ash.pos.x, ash.pos.y, mapa);
                 inCombat = false;
             }
-            break;
         }
+        else
+            goto CheckInput;
     }
 
     currentScene = GameScene::GAMEPLAY;
