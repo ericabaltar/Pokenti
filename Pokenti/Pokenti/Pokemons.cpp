@@ -130,9 +130,7 @@ bool Pokemons::CazarPokemon(int jugadorX, int jugadorY, Position playerPos, cons
     if (GetAsyncKeyState(VK_SPACE) && (mapa.casillas[jugadorY - 1][jugadorX] == Casilla::POKEMON || mapa.casillas[jugadorY + 1][jugadorX] == Casilla::POKEMON
         || mapa.casillas[jugadorY][jugadorX + 1] == Casilla::POKEMON || mapa.casillas[jugadorY][jugadorX - 1] == Casilla::POKEMON) || ((jugadorX == mewtwoX && (jugadorY == mewtwoY - 1 || jugadorY == mewtwoY + 1)) ||
             (jugadorY == mewtwoY && (jugadorX == mewtwoX - 1 || jugadorX == mewtwoX + 1)))) {
-     
-        
-        return CombatePokemon(jugadorX, jugadorY, mapa, pokemons, ash, settings);
+        return true;
     }
     return false;
 }
@@ -182,7 +180,7 @@ bool Pokemons::CapturarPokemon(int jugadorX, int jugadorY, const Mapa& mapa, Pok
                 (jugadorY == mewtwoY && (jugadorX == mewtwoX - 1 || jugadorX == mewtwoX + 1)))) {
                 mapa.casillas[mewtwoY][mewtwoX] = Casilla::VACIO;
             }
-            return CombatePokemon(jugadorX, jugadorY, mapa, pokemons, ash, settings);
+            
         }
     }
     else {
@@ -192,7 +190,7 @@ bool Pokemons::CapturarPokemon(int jugadorX, int jugadorY, const Mapa& mapa, Pok
             mapa.casillas[mewtwoY][mewtwoX] = Casilla::VACIO;
             return true;
         }
-        return CombatePokemon(jugadorX, jugadorY, mapa, pokemons, ash, settings);
+        
     }
 }
 
@@ -243,7 +241,6 @@ bool Pokemons::AtacarPokemon(int jugadorX, int jugadorY, const Mapa& mapa, Pokem
             }
 
          }
-    return CombatePokemon(jugadorX, jugadorY, mapa, pokemons, ash, settings);
 }
 
 bool Pokemons::Huir(int jugadorX, int jugadorY, const Mapa& mapa)
@@ -256,51 +253,4 @@ bool Pokemons::Huir(int jugadorX, int jugadorY, const Mapa& mapa)
     return true;
 }
 
-bool Pokemons::CombatePokemon(int jugadorX, int jugadorY, const Mapa& mapa, Pokemons& pokemons, Ash& ash, Settings& settings)
-{
-    int opcion = 0;
-    const int numOpciones = 3;
-    std::string opciones[numOpciones] = { "CAPTURAR", "ATACAR", "HUIR" };
-    bool inputDetected = false;
-
-    while (!inputDetected) {
-        system("cls");
-
-        // Mostrar menú
-        for (int i = 0; i < numOpciones; ++i) {
-            if (i == opcion) {
-                std::cout << "> " << opciones[i] << "\n";
-            }
-            else {
-                std::cout << "  " << opciones[i] << "\n";
-            }
-        }
-
-        int tecla = _getch();
-        if (tecla == 224) { // Flechas
-            tecla = _getch();
-            if (tecla == 72) { // Flecha arriba
-                opcion = (opcion - 1 + numOpciones) % numOpciones;
-            }
-            else if (tecla == 80) { // Flecha abajo
-                opcion = (opcion + 1) % numOpciones;
-            }
-        }
-        else if (tecla == 13) { // Enter
-            inputDetected = true;
-        }
-    }
-
-    switch (opcion) {
-    case 0:
-        return  CapturarPokemon(jugadorX, jugadorY, mapa, pokemons, ash, settings);
-    case 1:
-        return AtacarPokemon(jugadorX, jugadorY, mapa, pokemons, ash, settings); 
-    case 2:
-        return Huir(jugadorX, jugadorY, mapa);
-    default:
-        std::cout << "Opción inválida\n";
-        return false;
-    }
-}
 

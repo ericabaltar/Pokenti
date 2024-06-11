@@ -16,6 +16,8 @@ enum class GameScene
 
     GAMEPLAY,
 
+    COMBAT,
+
     GAMEOVER
 };
 
@@ -66,6 +68,17 @@ void UpdateGameStats(const Ash& ash, const Zonas& zona)
         break;
     }
     std::cout << "                      [ " << zonaNombre << " ]";
+}
+
+void MostrarInterfazCombate(int selectedOption)
+{
+   
+    gotoxy(0, 23);
+    std::cout << "[Nombre de enemigo] [Nivel de salud]";
+    gotoxy(0, 24);
+    std::cout << (selectedOption == 0 ? "> " : "  ") << "ATACAR   ";
+    std::cout << (selectedOption == 1 ? "> " : "  ") << "CAPTURAR   ";
+    std::cout << (selectedOption == 2 ? "> " : "  ") << "HUIR";
 }
 
 void ShowMainMenu(GameScene& currentScene) {
@@ -125,6 +138,54 @@ ___  ___      _        ___  ___
         }
     }
 }
+
+void CombatMenu(Ash& ash, Pokemons& pokemons, Mapa& mapa, Settings& settings, GameScene& currentScene)
+{
+    int selectedOption = 0;
+    bool inCombat = true;
+
+    while (inCombat) {
+        // Redibujar el mapa y la interfaz de juego
+        system("cls");
+        mapa.PintarVista(ash.pos);
+        Zonas currentZone = mapa.GetZona(ash.pos);
+        UpdateGameStats(ash, currentZone);
+
+        // Mostrar la interfaz de combate
+        MostrarInterfazCombate(selectedOption);
+
+        int ch = _getch();
+        switch (ch) {
+        case 72: // Flecha arriba
+        case 75: // Flecha izquierda
+            selectedOption = (selectedOption - 1 + 3) % 3;
+            break;
+        case 80: // Flecha abajo
+        case 77: // Flecha derecha
+            selectedOption = (selectedOption + 1) % 3;
+            break;
+        case 13: // Enter
+            if (selectedOption == 0) { // ATACAR
+                if (pokemons.AtacarPokemon(ash.pos.x, ash.pos.y, mapa, pokemons, ash, settings)) {
+                    inCombat = false;
+                }
+            }
+            else if (selectedOption == 1) { // CAPTURAR
+                if (pokemons.CapturarPokemon(ash.pos.x, ash.pos.y, mapa, pokemons, ash, settings)) {
+                    inCombat = false;
+                }
+            }
+            else if (selectedOption == 2) { // HUIR
+                pokemons.Huir(ash.pos.x, ash.pos.y, mapa);
+                inCombat = false;
+            }
+            break;
+        }
+    }
+
+    currentScene = GameScene::GAMEPLAY;
+}
+
 int main() {
 
     srand(time(NULL));
@@ -235,16 +296,23 @@ int main() {
               bosqueBloqueado = false;
            }
 
-            //mapa.PintarTodo();
            mapa.PintarVista(ash.pos);
            Zonas currentZone = mapa.GetZona(ash.pos);
            UpdateGameStats(ash, currentZone);
 
+           if (pokemons.CazarPokemon(ash.pos.x, ash.pos.y, ash.pos, mapa, pokemons, ash, settings)) {
+               currentScene = GameScene::COMBAT;
+           }
 
-            Sleep(1000 / MAX_NUM_FPS);
-            system("cls");
+           Sleep(1000 / MAX_NUM_FPS);
+           system("cls");
         }
             break;
+
+        case GameScene::COMBAT:
+        {
+            CombatMenu(ash, pokemons, mapa, settings, currentScene);
+        }
         case GameScene::GAMEOVER:
         {
             std::cout << "\033[38;5;153m";

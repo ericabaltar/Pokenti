@@ -15,14 +15,15 @@ public:
     void GestionarPokemons(Mapa& mapa, Settings& settings);
     bool CazarPokemon(int jugadorX, int jugadorY, Position playerPos, const Mapa& mapa, Pokemons& pokemons, Ash& ash, Settings& settings);
     bool GestionarMewtwo(int jugadorX, int jugadorY, const Mapa& mapa,Settings& settings);
+    bool CapturarPokemon(int jugadorX, int jugadorY, const Mapa& mapa, Pokemons& pokemons, Ash& ash, Settings& settings);
+    bool AtacarPokemon(int jugadorX, int jugadorY, const Mapa& mapa, Pokemons& pokemons, Ash& ash, Settings& settings);
+    bool Huir(int jugadorX, int jugadorY, const Mapa& mapa);
 
 private:
 
     void MoverPokemons(Mapa& mapa, Settings& settings);
-    bool CapturarPokemon(int jugadorX, int jugadorY, const Mapa& mapa, Pokemons& pokemons, Ash& ash, Settings& settings);
-    bool AtacarPokemon(int jugadorX, int jugadorY, const Mapa& mapa, Pokemons& pokemons, Ash& ash, Settings& settings);
-    bool Huir(int jugadorX, int jugadorY, const Mapa& mapa);
-    bool CombatePokemon(int jugadorX, int jugadorY, const Mapa& mapa, Pokemons& pokemons, Ash& ash, Settings& settings);
+
+  
 
     bool pokemonsMoviendose = true;
 
