@@ -60,9 +60,13 @@ void UpdateGameStats(const Ash& ash, const Zonas& zona)
 
 void MostrarInterfazCombate(int selectedOption, const std::string& pokemonName, Settings& settings)
 {
-    // Actualiza solo la parte de la interfaz de combate
     gotoxy(0, 23);
-    std::cout << "[" << pokemonName << "] [" << settings.POKEMON_LIFE << "]";
+    if (pokemonName == "Mewtwo") { // Actualiza solo la parte de la interfaz de combate
+        std::cout << "[" << pokemonName << "] [" << settings.MEWTWO_LIFE << "]";
+    }
+    else {
+        std::cout << "[" << pokemonName << "] [" << settings.POKEMON_LIFE << "]";
+    }
     gotoxy(0, 24);
     std::cout << (selectedOption == 0 ? "> ATACAR   " : "  ATACAR   ");
     std::cout << (selectedOption == 1 ? "> CAPTURAR   " : "  CAPTURAR   ");
@@ -167,11 +171,16 @@ void CombatMenu(Ash& ash, Pokemons& pokemons, Mapa& mapa, Settings& settings, Ga
             }
             else if (selectedOption == 2) { // HUIR
                 pokemons.Huir(ash.pos.x, ash.pos.y, mapa);
+                FileReader::ReadSettings("config.txt", settings);
                 inCombat = false;
             }
         }
         else
             goto CheckInput;
+        if ((settings.POKEMON_LIFE <= 0) ||(ash.PokeBall == 0)){
+            FileReader::ReadSettings("config.txt", settings);
+            inCombat = false;
+        }
     }
 
     currentScene = GameScene::GAMEPLAY;

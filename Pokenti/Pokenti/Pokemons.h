@@ -38,8 +38,6 @@ private:
 
     void MoverPokemons(Mapa& mapa, Settings& settings);
 
-  
-
     bool pokemonsMoviendose = true;
 
     int pokemonsPresentesZona1;

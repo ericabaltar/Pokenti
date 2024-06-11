@@ -219,7 +219,7 @@ bool Pokemons::AtacarPokemon(int jugadorX, int jugadorY, const Mapa& mapa, Pokem
 
         settings.POKEMON_LIFE -= settings.PICACHU_DAMAGE;
         std::cout << std::endl;
-        std::cout << "Vida restante del Pokemon: " << settings.MEWTWO_LIFE << "\n";
+        std::cout << "Buen golpe, ahora tiene: " << settings.POKEMON_LIFE << "\n";
         std::cout << std::endl;
         std::cout << "Dano de Pikachu: " << settings.PICACHU_DAMAGE << "\n";
 
@@ -247,7 +247,10 @@ bool Pokemons::AtacarPokemon(int jugadorX, int jugadorY, const Mapa& mapa, Pokem
     else if (EsMewtwo(jugadorX, jugadorY, mapa)) {
 
             settings.MEWTWO_LIFE -= settings.PICACHU_DAMAGE;
-
+            std::cout << std::endl;
+            std::cout << "Buen golpe, ahora tiene: " << settings.MEWTWO_LIFE << "\n";
+            std::cout << std::endl;
+            std::cout << "Dano de Pikachu: " << settings.PICACHU_DAMAGE << "\n";
             if (settings.MEWTWO_LIFE <= 0) {
 
                 mapa.casillas[mewtwoY][mewtwoX] = Casilla::VACIO;
