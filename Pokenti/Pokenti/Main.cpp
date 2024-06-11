@@ -168,13 +168,13 @@ void CombatMenu(Ash& ash, Pokemons& pokemons, Mapa& mapa, Settings& settings, Ga
         else if (GetAsyncKeyState(VK_SPACE)) {
             if (selectedOption == 0) { // ATACAR
                 if (pokemons.AtacarPokemon(ash.pos.x, ash.pos.y, mapa, pokemons, ash, settings)) {
-                    inCombat = false;
+                    inCombat = true;
                 }
                 Sleep(500);
             }
             else if (selectedOption == 1) { // CAPTURAR
                 if (pokemons.CapturarPokemon(ash.pos.x, ash.pos.y, mapa, pokemons, ash, settings)) {
-                    inCombat = false;
+                    inCombat = true;
                 }
             }
             else if (selectedOption == 2) { // HUIR
@@ -317,6 +317,7 @@ int main() {
             CombatMenu(ash, pokemons, mapa, settings, currentScene);
             system("cls");
         }
+        break;
         case GameScene::GAMEOVER:
         {
             system("cls");
