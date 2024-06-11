@@ -4,6 +4,7 @@
 #include "FileReader.h"
 #include <ctime>
 #include <chrono>
+#include <conio.h>
 
 class Ash;
 class Mapa;
@@ -13,11 +14,17 @@ public:
 
     void GestionarPokemons(Mapa& mapa, Settings& settings);
     bool CazarPokemon(int jugadorX, int jugadorY, Position playerPos, const Mapa& mapa, Pokemons& pokemons, Ash& ash, Settings& settings);
-    bool GestionarMewtwo(int jugadorX, int jugadorY, const Mapa& mapa, Settings& settings);
+    bool GestionarMewtwo(int jugadorX, int jugadorY, const Mapa& mapa,Settings& settings);
 
 private:
 
-    void MoverPokemons(Mapa& mapa, const Settings& settings);
+    void MoverPokemons(Mapa& mapa, Settings& settings);
+    bool CapturarPokemon(int jugadorX, int jugadorY, const Mapa& mapa, Pokemons& pokemons, Ash& ash, Settings& settings);
+    bool AtacarPokemon(int jugadorX, int jugadorY, const Mapa& mapa, Pokemons& pokemons, Ash& ash, Settings& settings);
+    bool Huir(int jugadorX, int jugadorY, const Mapa& mapa);
+    bool CombatePokemon(int jugadorX, int jugadorY, const Mapa& mapa, Pokemons& pokemons, Ash& ash, Settings& settings);
+
+    bool pokemonsMoviendose = true;
 
     int pokemonsPresentesZona1;
     int pokemonsPresentesZona2;
@@ -35,5 +42,5 @@ private:
     int mewtwoX = 52;
     int mewtwoY = 37;
 
- 
 };
+

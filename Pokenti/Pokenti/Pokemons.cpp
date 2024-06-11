@@ -43,7 +43,7 @@ void Pokemons::GestionarPokemons(Mapa& mapa, Settings& settings)
     MoverPokemons(mapa, settings);
 }
 
-void Pokemons::MoverPokemons(Mapa& mapa, const Settings& settings)
+void Pokemons::MoverPokemons(Mapa& mapa, Settings& settings)
 {
     auto now = std::chrono::system_clock::now();
     std::chrono::duration<double> elapsed_seconds = now - lastMoveTime;
@@ -117,49 +117,190 @@ bool Pokemons::GestionarMewtwo(int jugadorX, int jugadorY, const Mapa& mapa, Set
     int mewtwoY = 37;
     if (!mewtwoAparecido) {
 
-        mapa.casillas[mewtwoY][mewtwoX] = Casilla::MEWTWO;
-        settings.MEWTWO_LIFE = settings.MEWTWO_LIFE;
+        mapa.casillas[mewtwoY][mewtwoX] = Casilla::MEWTWO; 
         mewtwoAparecido = true;
         return true;
     }
-    if (GetAsyncKeyState(VK_SPACE) && ((jugadorX == mewtwoX && (jugadorY == mewtwoY - 1 || jugadorY == mewtwoY + 1)) ||
-        (jugadorY == mewtwoY && (jugadorX == mewtwoX - 1 || jugadorX == mewtwoX + 1))))
-    {
-        mapa.casillas[mewtwoY][mewtwoX] = Casilla::VACIO;
-        return true;
-    }
+
     return false;
 }
 
 bool Pokemons::CazarPokemon(int jugadorX, int jugadorY, Position playerPos, const Mapa& mapa, Pokemons& pokemons, Ash& ash, Settings& settings)
 {
     if (GetAsyncKeyState(VK_SPACE) && (mapa.casillas[jugadorY - 1][jugadorX] == Casilla::POKEMON || mapa.casillas[jugadorY + 1][jugadorX] == Casilla::POKEMON
-        || mapa.casillas[jugadorY][jugadorX + 1] == Casilla::POKEMON || mapa.casillas[jugadorY][jugadorX - 1] == Casilla::POKEMON)) {
-
-        if (mapa.casillas[jugadorY - 1][jugadorX] == Casilla::POKEMON)
-            mapa.casillas[jugadorY - 1][jugadorX] = Casilla::VACIO;
-        else if (mapa.casillas[jugadorY + 1][jugadorX] == Casilla::POKEMON)
-            mapa.casillas[jugadorY + 1][jugadorX] = Casilla::VACIO;
-        else if (mapa.casillas[jugadorY][jugadorX + 1] == Casilla::POKEMON)
-            mapa.casillas[jugadorY][jugadorX + 1] = Casilla::VACIO;
-        else if (mapa.casillas[jugadorY][jugadorX - 1] == Casilla::POKEMON)
-            mapa.casillas[jugadorY][jugadorX - 1] = Casilla::VACIO;
-
-        ash.Pokimon += 1;
-
-        if (GestionarMewtwo(jugadorX, jugadorY, mapa, settings)) {
-            return true;
-        }
-
-        int nuevoPokemonX, nuevoPokemonY;
-        do {
-            nuevoPokemonX = rand() % (settings.COLUMNAS - 1) + 1;
-            nuevoPokemonY = rand() % (settings.FILAS / 2 - 1) + 1;
-        } while (mapa.casillas[nuevoPokemonY][nuevoPokemonX] != Casilla::VACIO);
-
-        mapa.casillas[nuevoPokemonY][nuevoPokemonX] = Casilla::POKEMON;
-
-        return true;
+        || mapa.casillas[jugadorY][jugadorX + 1] == Casilla::POKEMON || mapa.casillas[jugadorY][jugadorX - 1] == Casilla::POKEMON) || ((jugadorX == mewtwoX && (jugadorY == mewtwoY - 1 || jugadorY == mewtwoY + 1)) ||
+            (jugadorY == mewtwoY && (jugadorX == mewtwoX - 1 || jugadorX == mewtwoX + 1)))) {
+     
+        
+        return CombatePokemon(jugadorX, jugadorY, mapa, pokemons, ash, settings);
     }
     return false;
 }
+
+bool Pokemons::CapturarPokemon(int jugadorX, int jugadorY, const Mapa& mapa, Pokemons& pokemons, Ash& ash, Settings& settings)
+{
+    if (ash.PokeBall > 0) {
+        ash.PokeBall--;
+        int probabilidad = 100 - settings.POKEMON_LIFE;
+        int probabilidadLegendaria = 100 - settings.MEWTWO_LIFE;
+        int randNum = rand() % 100;
+        if (randNum < probabilidad) {
+            std::cout << "Has capturado el Pokémon!\n";
+            if (mapa.casillas[jugadorY - 1][jugadorX] == Casilla::POKEMON)
+                mapa.casillas[jugadorY - 1][jugadorX] = Casilla::VACIO;
+            else if (mapa.casillas[jugadorY + 1][jugadorX] == Casilla::POKEMON)
+                mapa.casillas[jugadorY + 1][jugadorX] = Casilla::VACIO;
+            else if (mapa.casillas[jugadorY][jugadorX + 1] == Casilla::POKEMON)
+                mapa.casillas[jugadorY][jugadorX + 1] = Casilla::VACIO;
+            else if (mapa.casillas[jugadorY][jugadorX - 1] == Casilla::POKEMON)
+                mapa.casillas[jugadorY][jugadorX - 1] = Casilla::VACIO;
+
+            ash.Pokimon += 1;
+
+            int nuevoPokemonX, nuevoPokemonY;
+            do {
+                nuevoPokemonX = rand() % (settings.COLUMNAS - 1) + 1;
+                nuevoPokemonY = rand() % (settings.FILAS / 2 - 1) + 1;
+            } while (mapa.casillas[nuevoPokemonY][nuevoPokemonX] != Casilla::VACIO);
+
+            mapa.casillas[nuevoPokemonY][nuevoPokemonX] = Casilla::POKEMON;
+
+            return true;
+        }
+        else if(randNum < probabilidadLegendaria && ((jugadorX == mewtwoX && (jugadorY == mewtwoY - 1 || jugadorY == mewtwoY + 1)) ||
+               (jugadorY == mewtwoY && (jugadorX == mewtwoX - 1 || jugadorX == mewtwoX + 1)))) {
+
+                std::cout << "Has capturado a Mewtwo!!!\n";
+
+                mapa.casillas[mewtwoY][mewtwoX] = Casilla::VACIO;
+
+            return true;
+        }
+             else {
+            std::cout << "El Pokémon no fue capturado!\n";
+            if (((jugadorX == mewtwoX && (jugadorY == mewtwoY - 1 || jugadorY == mewtwoY + 1)) ||
+                (jugadorY == mewtwoY && (jugadorX == mewtwoX - 1 || jugadorX == mewtwoX + 1)))) {
+                mapa.casillas[mewtwoY][mewtwoX] = Casilla::VACIO;
+            }
+            return CombatePokemon(jugadorX, jugadorY, mapa, pokemons, ash, settings);
+        }
+    }
+    else {
+        std::cout << "No tienes Pokeballs!\n";
+        if (((jugadorX == mewtwoX && (jugadorY == mewtwoY - 1 || jugadorY == mewtwoY + 1)) ||
+            (jugadorY == mewtwoY && (jugadorX == mewtwoX - 1 || jugadorX == mewtwoX + 1)))) {
+            mapa.casillas[mewtwoY][mewtwoX] = Casilla::VACIO;
+            return true;
+        }
+        return CombatePokemon(jugadorX, jugadorY, mapa, pokemons, ash, settings);
+    }
+}
+
+bool Pokemons::AtacarPokemon(int jugadorX, int jugadorY, const Mapa& mapa, Pokemons& pokemons, Ash& ash, Settings& settings)
+{
+  
+
+
+    if ((mapa.casillas[jugadorY - 1][jugadorX] == Casilla::POKEMON || mapa.casillas[jugadorY + 1][jugadorX] == Casilla::POKEMON
+        || mapa.casillas[jugadorY][jugadorX + 1] == Casilla::POKEMON || mapa.casillas[jugadorY][jugadorX - 1] == Casilla::POKEMON)) {
+
+        settings.POKEMON_LIFE -= settings.PICACHU_DAMAGE;
+
+        std::cout << "Vida restante del Pokémon: " << settings.MEWTWO_LIFE << "\n";
+        std::cout << "Daño de Ericachu: " << settings.PICACHU_DAMAGE << "\n";
+
+        if (settings.POKEMON_LIFE <= 0) {
+            if (mapa.casillas[jugadorY - 1][jugadorX] == Casilla::POKEMON)
+                mapa.casillas[jugadorY - 1][jugadorX] = Casilla::VACIO;
+            else if (mapa.casillas[jugadorY + 1][jugadorX] == Casilla::POKEMON)
+                mapa.casillas[jugadorY + 1][jugadorX] = Casilla::VACIO;
+            else if (mapa.casillas[jugadorY][jugadorX + 1] == Casilla::POKEMON)
+                mapa.casillas[jugadorY][jugadorX + 1] = Casilla::VACIO;
+            else if (mapa.casillas[jugadorY][jugadorX - 1] == Casilla::POKEMON)
+                mapa.casillas[jugadorY][jugadorX - 1] = Casilla::VACIO;
+
+            int nuevoPokemonX, nuevoPokemonY;
+            do {
+                nuevoPokemonX = rand() % (settings.COLUMNAS - 1) + 1;
+                nuevoPokemonY = rand() % (settings.FILAS / 2 - 1) + 1;
+            } while (mapa.casillas[nuevoPokemonY][nuevoPokemonX] != Casilla::VACIO);
+
+            mapa.casillas[nuevoPokemonY][nuevoPokemonX] = Casilla::POKEMON;
+
+            return true;
+        }
+    }
+    else if (((jugadorX == mewtwoX && (jugadorY == mewtwoY - 1 || jugadorY == mewtwoY + 1)) ||
+            (jugadorY == mewtwoY && (jugadorX == mewtwoX - 1 || jugadorX == mewtwoX + 1)))) {
+
+            settings.MEWTWO_LIFE -= settings.PICACHU_DAMAGE;
+
+            if (settings.MEWTWO_LIFE <= 0) {
+
+                mapa.casillas[mewtwoY][mewtwoX] = Casilla::VACIO;
+
+                 return true;
+            }
+
+         }
+    return CombatePokemon(jugadorX, jugadorY, mapa, pokemons, ash, settings);
+}
+
+bool Pokemons::Huir(int jugadorX, int jugadorY, const Mapa& mapa)
+{
+
+    if(((jugadorX == mewtwoX && (jugadorY == mewtwoY - 1 || jugadorY == mewtwoY + 1)) ||
+        (jugadorY == mewtwoY && (jugadorX == mewtwoX - 1 || jugadorX == mewtwoX + 1))))
+        mapa.casillas[mewtwoY][mewtwoX] = Casilla::VACIO;
+
+    return true;
+}
+
+bool Pokemons::CombatePokemon(int jugadorX, int jugadorY, const Mapa& mapa, Pokemons& pokemons, Ash& ash, Settings& settings)
+{
+    int opcion = 0;
+    const int numOpciones = 3;
+    std::string opciones[numOpciones] = { "CAPTURAR", "ATACAR", "HUIR" };
+    bool inputDetected = false;
+
+    while (!inputDetected) {
+        system("cls");
+
+        // Mostrar menú
+        for (int i = 0; i < numOpciones; ++i) {
+            if (i == opcion) {
+                std::cout << "> " << opciones[i] << "\n";
+            }
+            else {
+                std::cout << "  " << opciones[i] << "\n";
+            }
+        }
+
+        int tecla = _getch();
+        if (tecla == 224) { // Flechas
+            tecla = _getch();
+            if (tecla == 72) { // Flecha arriba
+                opcion = (opcion - 1 + numOpciones) % numOpciones;
+            }
+            else if (tecla == 80) { // Flecha abajo
+                opcion = (opcion + 1) % numOpciones;
+            }
+        }
+        else if (tecla == 13) { // Enter
+            inputDetected = true;
+        }
+    }
+
+    switch (opcion) {
+    case 0:
+        return  CapturarPokemon(jugadorX, jugadorY, mapa, pokemons, ash, settings);
+    case 1:
+        return AtacarPokemon(jugadorX, jugadorY, mapa, pokemons, ash, settings); 
+    case 2:
+        return Huir(jugadorX, jugadorY, mapa);
+    default:
+        std::cout << "Opción inválida\n";
+        return false;
+    }
+}
+

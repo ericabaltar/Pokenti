@@ -11,7 +11,7 @@ bool FileReader::ReadSettings(const std::string& filename, Settings& settings) {
     myFile >> settings.FILAS >> aux >> settings.COLUMNAS >> aux
         >> settings.FIRST_AREA_POKE >> aux >> settings.FIRST_AREA_MIN_POKE >> aux
         >> settings.SECOND_AREA_POKE >> aux >> settings.SECOND_AREA_MIN_POKE >> aux
-        >> settings.ERICACHU_DAMAGE >> aux
+        >> settings.PICACHU_DAMAGE >> aux
         >> settings.POKEMON_LIFE >> aux >> settings.MEWTWO_LIFE >> aux
         >> settings.MIN_TIME_MOVE_POKEMON >> aux >> settings.MAX_TIME_MOVE_POKEMON >> aux;
 

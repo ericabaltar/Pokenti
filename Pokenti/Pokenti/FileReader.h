@@ -10,7 +10,7 @@ public:
     int FIRST_AREA_MIN_POKE;
     int SECOND_AREA_POKE;
     int SECOND_AREA_MIN_POKE;
-    int ERICACHU_DAMAGE;
+    int PICACHU_DAMAGE;
     int POKEMON_LIFE;
     int MEWTWO_LIFE;
     int MIN_TIME_MOVE_POKEMON;

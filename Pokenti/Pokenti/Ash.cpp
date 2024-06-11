@@ -2,8 +2,8 @@
 
 
 Ash::Ash() {
-    Pokimon = 0;
-    PokeBall = 0;
+    Pokimon = 20;
+    PokeBall = 10;
     pos.x = this->prevPos.x = 2;
     pos.y = this->prevPos.y = 2;
     AshLook = '^';
