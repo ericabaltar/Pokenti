@@ -30,6 +30,7 @@ public:
     bool AtacarPokemon(int jugadorX, int jugadorY, const Mapa& mapa, Pokemons& pokemons, Ash& ash, Settings& settings);
     bool Huir(int jugadorX, int jugadorY, const Mapa& mapa);
     static std::string GetRandomPokemonName();
+    void MostrarMensajeConRetardo(const std::string& mensaje);
 private:
 
     void MoverPokemons(Mapa& mapa, Settings& settings);

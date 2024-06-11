@@ -1,4 +1,5 @@
 #include "Pokemons.h"
+#include <thread>
 
 void Pokemons::GestionarPokemons(Mapa& mapa, Settings& settings)
 {
@@ -137,6 +138,7 @@ bool Pokemons::CazarPokemon(int jugadorX, int jugadorY, Position playerPos, cons
 
 bool Pokemons::CapturarPokemon(int jugadorX, int jugadorY, const Mapa& mapa, Pokemons& pokemons, Ash& ash, Settings& settings)
 {
+    std::string mensaje;
     if (ash.PokeBall > 0) {
         ash.PokeBall--;
         const int probabilidad = 100 - settings.POKEMON_LIFE;
@@ -195,21 +197,22 @@ bool Pokemons::CapturarPokemon(int jugadorX, int jugadorY, const Mapa& mapa, Pok
         }
         
     }
+    MostrarMensajeConRetardo(mensaje);
+    return false;
 }
 
 bool Pokemons::AtacarPokemon(int jugadorX, int jugadorY, const Mapa& mapa, Pokemons& pokemons, Ash& ash, Settings& settings)
 {
-  
-
-
+    std::string mensaje;
+    
     if ((mapa.casillas[jugadorY - 1][jugadorX] == Casilla::POKEMON || mapa.casillas[jugadorY + 1][jugadorX] == Casilla::POKEMON
         || mapa.casillas[jugadorY][jugadorX + 1] == Casilla::POKEMON || mapa.casillas[jugadorY][jugadorX - 1] == Casilla::POKEMON)) {
 
         settings.POKEMON_LIFE -= settings.PICACHU_DAMAGE;
         std::cout << std::endl;
-        std::cout << "Vida restante del Pokémon: " << settings.MEWTWO_LIFE << "\n";
+        std::cout << "Vida restante del Pokemon: " << settings.MEWTWO_LIFE << "\n";
         std::cout << std::endl;
-        std::cout << "Daño de Pikachu: " << settings.PICACHU_DAMAGE << "\n";
+        std::cout << "Dano de Pikachu: " << settings.PICACHU_DAMAGE << "\n";
 
         if (settings.POKEMON_LIFE <= 0) {
             if (mapa.casillas[jugadorY - 1][jugadorX] == Casilla::POKEMON)
@@ -245,10 +248,15 @@ bool Pokemons::AtacarPokemon(int jugadorX, int jugadorY, const Mapa& mapa, Pokem
             }
 
          }
+    MostrarMensajeConRetardo(mensaje);
+    return false;
 }
 
 bool Pokemons::Huir(int jugadorX, int jugadorY, const Mapa& mapa)
 {
+    std::cout << std::endl;
+    std::string mensaje = "Has huido!";
+    MostrarMensajeConRetardo(mensaje);
 
     if(((jugadorX == mewtwoX && (jugadorY == mewtwoY - 1 || jugadorY == mewtwoY + 1)) ||
         (jugadorY == mewtwoY && (jugadorX == mewtwoX - 1 || jugadorX == mewtwoX + 1))))
@@ -275,5 +283,11 @@ std::string Pokemons::GetRandomPokemonName() {
 
     int randomIndex = rand() % pokemonNames.size();
     return pokemonNames[randomIndex];
+}
+
+void Pokemons::MostrarMensajeConRetardo(const std::string& mensaje) {
+    std::cout << mensaje << std::endl;
+    std::this_thread::sleep_for(std::chrono::seconds(3));
+    std::cout << "\033[2J\033[1;1H"; 
 }
 
