@@ -1,6 +1,8 @@
 #include "Pokemons.h"
 #include <thread>
 
+bool Pokemons::mewtwoAparecido = false;
+
 void Pokemons::GestionarPokemons(Mapa& mapa, Settings& settings)
 {
     int pokemonsPresentesZona1 = 0;
@@ -126,11 +128,19 @@ bool Pokemons::GestionarMewtwo(int jugadorX, int jugadorY, const Mapa& mapa, Set
     return false;
 }
 
+bool Pokemons::EsMewtwo(int jugadorX, int jugadorY, const Mapa& mapa)
+{
+    return (mapa.casillas[jugadorY][jugadorX] == Casilla::MEWTWO ||
+        (jugadorX == mewtwoX && (jugadorY == mewtwoY - 1 || jugadorY == mewtwoY + 1)) ||
+        (jugadorY == mewtwoY && (jugadorX == mewtwoX - 1 || jugadorX == mewtwoX + 1)));
+}
+
 bool Pokemons::CazarPokemon(int jugadorX, int jugadorY, Position playerPos, const Mapa& mapa, Pokemons& pokemons, Ash& ash, Settings& settings)
 {
-    if (GetAsyncKeyState(VK_SPACE) && (mapa.casillas[jugadorY - 1][jugadorX] == Casilla::POKEMON || mapa.casillas[jugadorY + 1][jugadorX] == Casilla::POKEMON
-        || mapa.casillas[jugadorY][jugadorX + 1] == Casilla::POKEMON || mapa.casillas[jugadorY][jugadorX - 1] == Casilla::POKEMON) || ((jugadorX == mewtwoX && (jugadorY == mewtwoY - 1 || jugadorY == mewtwoY + 1)) ||
-            (jugadorY == mewtwoY && (jugadorX == mewtwoX - 1 || jugadorX == mewtwoX + 1)))) {
+    if (GetAsyncKeyState(VK_SPACE) &&
+        (mapa.casillas[jugadorY - 1][jugadorX] == Casilla::POKEMON || mapa.casillas[jugadorY + 1][jugadorX] == Casilla::POKEMON ||
+            mapa.casillas[jugadorY][jugadorX + 1] == Casilla::POKEMON || mapa.casillas[jugadorY][jugadorX - 1] == Casilla::POKEMON ||
+            EsMewtwo(jugadorX, jugadorY, mapa))) {
         return true;
     }
     return false;
@@ -168,8 +178,7 @@ bool Pokemons::CapturarPokemon(int jugadorX, int jugadorY, const Mapa& mapa, Pok
 
             return true;
         }
-        else if(randNum < probabilidadLegendaria && ((jugadorX == mewtwoX && (jugadorY == mewtwoY - 1 || jugadorY == mewtwoY + 1)) ||
-               (jugadorY == mewtwoY && (jugadorX == mewtwoX - 1 || jugadorX == mewtwoX + 1)))) {
+        else if(randNum < probabilidadLegendaria && EsMewtwo(jugadorX, jugadorY, mapa)) {
                 std::cout << std::endl;
                 std::cout << "Has capturado a Mewtwo!!!\n";
 
@@ -235,8 +244,7 @@ bool Pokemons::AtacarPokemon(int jugadorX, int jugadorY, const Mapa& mapa, Pokem
             return true;
         }
     }
-    else if (((jugadorX == mewtwoX && (jugadorY == mewtwoY - 1 || jugadorY == mewtwoY + 1)) ||
-            (jugadorY == mewtwoY && (jugadorX == mewtwoX - 1 || jugadorX == mewtwoX + 1)))) {
+    else if (EsMewtwo(jugadorX, jugadorY, mapa)) {
 
             settings.MEWTWO_LIFE -= settings.PICACHU_DAMAGE;
 
@@ -263,6 +271,14 @@ bool Pokemons::Huir(int jugadorX, int jugadorY, const Mapa& mapa)
         mapa.casillas[mewtwoY][mewtwoX] = Casilla::VACIO;
 
     return true;
+}
+
+std::string Pokemons::GetPokemonName(int jugadorX, int jugadorY, const Mapa& mapa)
+{
+    if (EsMewtwo(jugadorX, jugadorY, mapa)) {
+        return "Mewtwo";
+    }
+    return GetRandomPokemonName();
 }
 
 std::string Pokemons::GetRandomPokemonName() {

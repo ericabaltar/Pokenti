@@ -30,7 +30,10 @@ public:
     bool AtacarPokemon(int jugadorX, int jugadorY, const Mapa& mapa, Pokemons& pokemons, Ash& ash, Settings& settings);
     bool Huir(int jugadorX, int jugadorY, const Mapa& mapa);
     static std::string GetRandomPokemonName();
+    std::string GetPokemonName(int jugadorX, int jugadorY, const Mapa& mapa);
     void MostrarMensajeConRetardo(const std::string& mensaje);
+    bool EsMewtwo(int jugadorX, int jugadorY, const Mapa& mapa);
+
 private:
 
     void MoverPokemons(Mapa& mapa, Settings& settings);

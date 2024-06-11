@@ -132,7 +132,7 @@ void CombatMenu(Ash& ash, Pokemons& pokemons, Mapa& mapa, Settings& settings, Ga
 {
     int selectedOption = 0;
     bool inCombat = true;
-    std::string pokemonName = Pokemons::GetRandomPokemonName();
+    std::string pokemonName = pokemons.GetPokemonName(ash.pos.x, ash.pos.y, mapa);
 
     while (inCombat) {
         system("cls");
